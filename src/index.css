@@ -1,13 +1,127 @@
-/* body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+body {
+  font-family: Poppins, Arial, sans-serif;
+  background-color: hsl(0, 0%, 10%);
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-} */
+.to-do-list {
+  text-align: center;
+  margin-top: 100px;
+}
+
+h1 {
+  font-size: 64px;
+  color: white;
+}
+
+button {
+  font-size: 25px;
+  height: 50px;
+  width: 50px;
+  font-weight: bold;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  margin-left: 10px;
+  /* margin-right: px; */
+  cursor: pointer;
+  transition: background-color 0.1s ease;
+}
+
+.add-button {
+  background-color: hsl(125, 47%, 54%);
+}
+
+.add-button:hover {
+  background-color: hsl(125, 47%, 47%);
+}
+
+.delete-button {
+  background-color: hsl(0, 0%, 97%);
+  border: 1px solid rgb(150, 150, 150);
+}
+
+.delete-button:hover {
+  background-color: hsl(0, 0%, 90%);
+}
+
+.edit-button {
+  background-color: hsl(0, 0%, 97%);
+  border: 1px solid rgb(150, 150, 150);
+}
+
+.edit-button:hover {
+  background-color: hsl(0, 0%, 90%);
+}
+
+.check-item-button {
+  background-color: hsl(0, 0%, 97%);
+}
+
+.check-item-button:hover {
+  background-color: hsl(0, 0%, 90%);
+}
+
+input[type="text"] {
+  font-family: Poppins, Arial, sans-serif;
+  font-size: 25px;
+  height: 30px;
+  padding: 10px 15px;
+  
+  /* border: 2px solid hsla(0, 0%, 80%, 0.5); */
+  border: none;
+  border-radius: 5px;
+  /* color: hsla(0, 0%, 0%, 0.5); */
+}
+
+ol {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+li {
+  font-size: 32px;
+  font-weight: bold;
+  padding: 15px;
+  background-color: rgb(247, 247, 247);
+  margin-bottom: 10px;
+  /* border: 3px solid hsla(0, 0%, 85%, 0.75); */
+  border: none;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  min-width: 750px;
+  max-width: 750px;
+}
+
+.crossed {
+  background-color: rgb(200, 200, 200);
+}
+
+.text {
+  flex: 1;
+  text-align: left;
+}
+
+.text.crossed {
+  color: rgb(150, 150, 150);
+  text-decoration: line-through;
+}
+
+.check-item-button.crossed:hover {
+  background-color: rgb(176, 176, 176);
+}
+
+.read-button .edit-button {
+  padding: 8px 12px;
+  /* margin-left: 10px; */
+}
+
+.check-item-button {
+  margin-left: 0px;
+  margin-right: 10px;
+  border-radius: 50px;
+}

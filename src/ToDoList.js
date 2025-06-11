@@ -1,19 +1,19 @@
-import React, { useState } from 'react';
-import './ToDoList.css'
+import { useState } from 'react';
+import './index.css'
 
 function ToDoList() {
 
-  const [tasks, setTasks] = useState([]);
-  const [newTask, setNewTask] = useState("");
+  const [tasks, setTasks] = useState([{text: "Go to the gym", finished: "incomplete"}, {text: "Have breakfast", finished: "incomplete"}, {text: "Begin homework", finished: "incomplete"}]);
+  const [newTask, setNewTask] = useState({});
 
   function handleInputChange(e) {
-    setNewTask(e.target.value);
+    setNewTask({text: e.target.value, finished: 'incomplete'});
   }
 
   function addTask() {
-    if (newTask.trim() !== "") {
+    if (newTask.text.trim() !== "") {
       setTasks(prevTasks => [...prevTasks, newTask]);
-      setNewTask("");
+      setNewTask({text: "", finished: 'incomplete'});
     }
   }
 
@@ -22,6 +22,7 @@ function ToDoList() {
     setTasks(updatedTasks);
   }
 
+/*
   function moveTaskUp(index) {
     if (index > 0) {
       const updatedTasks = [...tasks];
@@ -37,6 +38,31 @@ function ToDoList() {
       setTasks(updatedTasks);
     }
   }
+  */
+
+  function finishTask(index) {
+    tasks.map((_, i) => {
+      if (i === index) {
+        const updatedTasks = [...tasks];
+        if (updatedTasks[i].finished === "incomplete") {
+          updatedTasks[i].finished = "complete";
+        } else if (updatedTasks[i].finished === "complete") {
+          updatedTasks[i].finished = "incomplete";
+        }
+        setTasks(updatedTasks);
+      }
+    });
+  }
+
+  /*
+  function expandTask(index) {
+    
+  }
+  */
+
+  function editTask(index) {
+    
+  }
 
   return (
     <div className="to-do-list">
@@ -46,7 +72,7 @@ function ToDoList() {
         <input
           type="text"
           placeholder="Enter a task..."
-          value={newTask}
+          value={newTask.text}
           onChange={handleInputChange}
         />
 
@@ -54,38 +80,38 @@ function ToDoList() {
           className="add-button"
           onClick={addTask}
         >
-          Add
+          +
         </button>
       </div>
 
       <ol>
         {tasks.map((task, index) => {
           return (
-            <li key={index}>
-              <span className="text">{task}</span>
+            <li className={`to-do-list-item ${task.finished === "complete" ? "crossed" : ""}`} key={index}>
+              <button
+                className={`check-item-button ${task.finished === "complete" ? "crossed" : ""}`}
+                onClick={() => {
+                  finishTask(index);
+                }}
+              >
+                ✔️
+              </button>
+              <span className={`text ${task.finished === "complete" ? "crossed" : ""}`}>{task.text}</span>
               <button
                 className="delete-button"
                 onClick={() => {
                   deleteTask(index)
                 }}
               >
-                Delete
+                🗑️
               </button>
               <button
-                className="move-button"
+                className="edit-button"
                 onClick={() => {
-                  moveTaskUp(index)
+                  editTask(index);
                 }}
               >
-                ☝️
-              </button>
-              <button
-                className="move-button"
-                onClick={() => {
-                  moveTaskDown(index)
-                }}
-              >
-                👇
+                ✏️
               </button>
             </li>
           );
