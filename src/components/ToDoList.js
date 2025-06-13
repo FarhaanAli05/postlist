@@ -1,17 +1,17 @@
 import { useState } from 'react';
-import './index.css'
 
 function ToDoList() {
-
-  const [tasks, setTasks] = useState([{text: "Go to the gym", finished: "incomplete"}, {text: "Have breakfast", finished: "incomplete"}, {text: "Begin homework", finished: "incomplete"}]);
+  const [tasks, setTasks] = useState([{'text': "Go to the gym", 'finished': "incomplete"}, {'text': "Have breakfast", 'finished': "incomplete"}, {'text': "Begin homework", 'finished': "incomplete"}]);
   const [newTask, setNewTask] = useState({});
+  const [editIndex, setEditIndex] = useState(-1);
+  const [editText, setEditText] = useState("");
 
   function handleInputChange(e) {
     setNewTask({text: e.target.value, finished: 'incomplete'});
   }
 
   function addTask() {
-    if (newTask.text.trim() !== "") {
+    if (newTask.text && newTask.text.trim() !== "") {
       setTasks(prevTasks => [...prevTasks, newTask]);
       setNewTask({text: "", finished: 'incomplete'});
     }
@@ -52,16 +52,6 @@ function ToDoList() {
         setTasks(updatedTasks);
       }
     });
-  }
-
-  /*
-  function expandTask(index) {
-    
-  }
-  */
-
-  function editTask(index) {
-    
   }
 
   return (
@@ -108,16 +98,29 @@ function ToDoList() {
               <button
                 className="edit-button"
                 onClick={() => {
-                  editTask(index);
+                  setEditIndex(index);
+                  setEditText(task.text);
                 }}
               >
                 ✏️
               </button>
+
+              {editIndex === index && (
+                <div>
+                  <input value={editText} type='text' onChange={(e) => setEditText(e.target.value)}/>
+                  <button onClick={() => setEditIndex(-1)}>Cancel</button>
+                  <button onClick={() => {
+                    const updatedTasks = [...tasks];
+                    updatedTasks[index] = {text: editText, finished: 'incomplete'};
+                    setTasks(updatedTasks);
+                    setEditIndex(-1);
+                  }}>Save</button>
+                </div>
+              )}
             </li>
           );
         })}
       </ol>
-
     </div>
   );
 }
