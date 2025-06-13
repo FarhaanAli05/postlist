@@ -6,6 +6,7 @@ body {
 .to-do-list {
   text-align: center;
   margin-top: 100px;
+  position: relative;
 }
 
 h1 {
@@ -94,7 +95,7 @@ li {
   display: flex;
   align-items: center;
   min-width: 750px;
-  max-width: 750px;
+  /* max-width: 750px; */
 }
 
 .crossed {
@@ -124,4 +125,31 @@ li {
   margin-left: 0px;
   margin-right: 10px;
   border-radius: 50px;
+}
+
+.edit-task {
+  position: absolute;
+  /* background-color: rgb(255, 29, 29); */
+  width: 750px;
+}
+
+.input-field {
+  width: 600px;
+  background-color: rgb(247, 247, 247);
+}
+
+.cancel-button {
+  background-color: hsl(0, 100%, 62%);
+}
+
+.cancel-button:hover {
+  background-color: hsl(0, 73%, 55%);
+}
+
+.save-button {
+  background-color: hsl(125, 47%, 54%);
+}
+
+.save-button:hover {
+  background-color: hsl(125, 47%, 47%);
 }

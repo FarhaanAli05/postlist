@@ -1,7 +1,10 @@
 import { useState } from 'react';
+import TaskInput from './TaskInput.js';
+import TaskItem from './TaskItem.js';
 
 function ToDoList() {
-  const [tasks, setTasks] = useState([{'text': "Go to the gym", 'finished': "incomplete"}, {'text': "Have breakfast", 'finished': "incomplete"}, {'text': "Begin homework", 'finished': "incomplete"}]);
+  // const [tasks, setTasks] = useState([{'text': "Go to the gym", 'finished': "incomplete"}, {'text': "Have breakfast", 'finished': "incomplete"}, {'text': "Begin homework", 'finished': "incomplete"}]);
+  const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState({});
   const [editIndex, setEditIndex] = useState(-1);
   const [editText, setEditText] = useState("");
@@ -58,66 +61,16 @@ function ToDoList() {
     <div className="to-do-list">
       <h1>To-Do List</h1>
 
-      <div>
-        <input
-          type="text"
-          placeholder="Enter a task..."
-          value={newTask.text}
-          onChange={handleInputChange}
-        />
-
-        <button
-          className="add-button"
-          onClick={addTask}
-        >
-          +
-        </button>
-      </div>
+      <TaskInput 
+        inputValue={newTask.text}
+        onInputChange={handleInputChange}
+        onAddClick={addTask}
+      />
 
       <ol>
         {tasks.map((task, index) => {
           return (
-            <li className={`to-do-list-item ${task.finished === "complete" ? "crossed" : ""}`} key={index}>
-              <button
-                className={`check-item-button ${task.finished === "complete" ? "crossed" : ""}`}
-                onClick={() => {
-                  finishTask(index);
-                }}
-              >
-                ✔️
-              </button>
-              <span className={`text ${task.finished === "complete" ? "crossed" : ""}`}>{task.text}</span>
-              <button
-                className="delete-button"
-                onClick={() => {
-                  deleteTask(index)
-                }}
-              >
-                🗑️
-              </button>
-              <button
-                className="edit-button"
-                onClick={() => {
-                  setEditIndex(index);
-                  setEditText(task.text);
-                }}
-              >
-                ✏️
-              </button>
-
-              {editIndex === index && (
-                <div>
-                  <input value={editText} type='text' onChange={(e) => setEditText(e.target.value)}/>
-                  <button onClick={() => setEditIndex(-1)}>Cancel</button>
-                  <button onClick={() => {
-                    const updatedTasks = [...tasks];
-                    updatedTasks[index] = {text: editText, finished: 'incomplete'};
-                    setTasks(updatedTasks);
-                    setEditIndex(-1);
-                  }}>Save</button>
-                </div>
-              )}
-            </li>
+            <TaskItem taskItem={task} taskIndex={index} onFinishClick={finishTask} onDeleteClick={deleteTask} onEditIndexClick={setEditIndex} onEditTextClick={setEditText} onEditTaskIndex={editIndex} editTextValue={editText} tasksList={tasks} saveEditedTask={setTasks}/>
           );
         })}
       </ol>
