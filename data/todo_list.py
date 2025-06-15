@@ -24,6 +24,12 @@ def post_to_do_finish(index):
     tasks[index]['finished'] = 'complete'
   return tasks
 
+@app.route('/tasks/edit/<int:index>', methods=['POST'])
+def post_to_do_edit(index):
+  editTask = request.get_json()
+  tasks[index] = {'text': editTask, 'finished': 'incomplete'}
+  return tasks
+
 @app.route('/tasks/<int:index>', methods=['DELETE'])
 def delete_to_do(index):
   return tasks.pop(index)

@@ -22,6 +22,12 @@ function ToDoList() {
     setNewTask({text: e.target.value, finished: 'incomplete'});
   }
 
+  const createEnterKeyHandler = (callbackFunction) => (e) => {
+    if (e.key === 'Enter') {
+      callbackFunction();
+    }
+  }
+
   async function addTask() {
     if (newTask.text && newTask.text.trim() !== "") {
       const response = await fetch('http://127.0.0.1:5000/tasks', {
@@ -79,12 +85,13 @@ function ToDoList() {
         inputValue={newTask.text}
         onInputChange={handleInputChange}
         onAddClick={addTask}
+        handleKeyDown={createEnterKeyHandler}
       />
 
       <ol>
         {tasks.map((task, index) => {
           return (
-            <TaskItem taskItem={task} taskIndex={index} onFinishClick={finishTask} onDeleteClick={deleteTask} onEditIndexClick={setEditIndex} onEditTextClick={setEditText} onEditTaskIndex={editIndex} editTextValue={editText} tasksList={tasks} saveEditedTask={setTasks}/>
+            <TaskItem taskItem={task} taskIndex={index} onFinishClick={finishTask} onDeleteClick={deleteTask} onEditIndexClick={setEditIndex} onEditTextClick={setEditText} onEditTaskIndex={editIndex} editTextValue={editText} tasksList={tasks} saveEditedTask={setTasks} />
           );
         })}
       </ol>
