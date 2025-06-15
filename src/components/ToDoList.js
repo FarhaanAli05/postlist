@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import {useState, useEffect} from 'react';
 import TaskInput from './TaskInput.js';
 import TaskItem from './TaskItem.js';
 
@@ -9,18 +9,38 @@ function ToDoList() {
   const [editIndex, setEditIndex] = useState(-1);
   const [editText, setEditText] = useState("");
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch('http://127.0.0.1:5000/tasks');
+      const data = await response.json();
+      setTasks(data);
+    }
+    fetchData();
+  }, []);
+
   function handleInputChange(e) {
     setNewTask({text: e.target.value, finished: 'incomplete'});
   }
 
-  function addTask() {
+  async function addTask() {
     if (newTask.text && newTask.text.trim() !== "") {
-      setTasks(prevTasks => [...prevTasks, newTask]);
+      const response = await fetch('http://127.0.0.1:5000/tasks', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newTask)
+      });
+      const data = await response.json();
+      setTasks(data);
       setNewTask({text: "", finished: 'incomplete'});
     }
   }
 
-  function deleteTask(index) {
+  async function deleteTask(index) {
+    await fetch(`http://127.0.0.1:5000/tasks/${index}`, {
+      method: 'DELETE'
+    });
     const updatedTasks = tasks.filter((_, i) => i !== index);
     setTasks(updatedTasks);
   }
@@ -43,18 +63,12 @@ function ToDoList() {
   }
   */
 
-  function finishTask(index) {
-    tasks.map((_, i) => {
-      if (i === index) {
-        const updatedTasks = [...tasks];
-        if (updatedTasks[i].finished === "incomplete") {
-          updatedTasks[i].finished = "complete";
-        } else if (updatedTasks[i].finished === "complete") {
-          updatedTasks[i].finished = "incomplete";
-        }
-        setTasks(updatedTasks);
-      }
+  async function finishTask(index) {
+    const response = await fetch(`http://127.0.0.1:5000/tasks/${index}`, {
+      method: 'POST'
     });
+    const data = await response.json();
+    setTasks(data);
   }
 
   return (
