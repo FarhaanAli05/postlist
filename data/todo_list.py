@@ -4,7 +4,7 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
-tasks = [{'text': "Go to the gym", 'finished': "incomplete"}, {'text': "Have breakfast", 'finished': "incomplete"}, {'text': "Begin homework", 'finished': "incomplete"}]
+tasks = [{'text': "Go to the gym", 'finished': "incomplete", 'description': ''}, {'text': "Go to the gym", 'finished': "incomplete", 'description': ''}, {'text': "Go to the gym", 'finished': "incomplete", 'description': ''}]
 
 @app.route('/tasks', methods=['GET'])
 def get_to_do():
@@ -27,7 +27,10 @@ def post_to_do_finish(index):
 @app.route('/tasks/edit/<int:index>', methods=['POST'])
 def post_to_do_edit(index):
   editTask = request.get_json()
-  tasks[index] = {'text': editTask, 'finished': 'incomplete'}
+  if editTask[1]:
+    tasks[index] = {'text': editTask[0], 'finished': 'incomplete', 'description': editTask[1]}
+  else:
+    tasks[index] = {'text': editTask[0], 'finished': 'incomplete', 'description': ''}
   return tasks
 
 @app.route('/tasks/<int:index>', methods=['DELETE'])
