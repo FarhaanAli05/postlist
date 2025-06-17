@@ -9,6 +9,7 @@ function ToDoList() {
   const [editIndex, setEditIndex] = useState(-1);
   const [editText, setEditText] = useState("");
   const [editDesc, setEditDesc] = useState("");
+  const [editQty, setEditQty] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -92,7 +93,7 @@ function ToDoList() {
       <ol>
         {tasks.map((task, index) => {
           return (
-            <TaskItem taskItem={task} taskIndex={index} onFinishClick={finishTask} onDeleteClick={deleteTask} onEditIndexClick={setEditIndex} onEditTextClick={setEditText} onEditTaskIndex={editIndex} editTextValue={editText} tasksList={tasks} saveEditedTask={setTasks} onEditDescClick={setEditDesc} editDescValue={editDesc} />
+            <TaskItem taskItem={task} taskIndex={index} onFinishClick={finishTask} onDeleteClick={deleteTask} onEditIndexClick={setEditIndex} onEditTextClick={setEditText} onEditTaskIndex={editIndex} editTextValue={editText} tasksList={tasks} saveEditedTask={setTasks} onEditDescClick={setEditDesc} editDescValue={editDesc} onEditQtyClick={setEditQty} editQtyValue={editQty} />
           );
         })}
       </ol>
