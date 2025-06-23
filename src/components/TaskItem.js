@@ -1,82 +1,85 @@
-function TaskItem({taskItem, taskIndex, onFinishClick, onDeleteClick, onEditIndexClick, onEditTextClick, onEditTaskIndex, editTextValue, tasksList, saveEditedTask, editDescValue, onEditDescClick, editQtyValue, onEditQtyClick}) {
+function TaskItem({task, index, finishTask, deleteTask, setEditIndex, setEditText, editIndex, editText, tasks, setTasks, editDesc, setEditDesc, editQty, setEditQty}) {
   return (
     <div className="to-do-list-item-container">
-      <span className="serial-number">{taskIndex + 1}. </span>
-      <li className={`to-do-list-item ${taskItem.finished === "complete" ? "crossed" : ""}`} key={taskIndex}>
+      <span className="serial-number">{index + 1}. </span>
+      <li className={`to-do-list-item ${task.finished === "complete" ? "crossed" : ""}`} key={index}>
         <button
-          className={`check-item-button ${onEditTaskIndex === taskIndex ? "hidden" : ""} ${taskItem.finished === "complete" ? "crossed" : ""}`}
+          className={`check-item-button ${editIndex === index ? "hidden" : ""} ${task.finished === "complete" ? "crossed" : ""}`}
           onClick={() => {
-            onFinishClick(taskIndex);
+            finishTask(index);
           }}
         >
           ✔️
         </button>
-        <span className={`text ${taskItem.finished === "complete" ? "crossed" : ""} ${onEditTaskIndex === taskIndex ? "hidden" : ""}`}>{taskItem.text}</span>
+        <span className={`text ${task.finished === "complete" ? "crossed" : ""} ${editIndex === index ? "hidden" : ""}`}>{task.text}</span>
         <button
-          className={`delete-button ${onEditTaskIndex === taskIndex ? "hidden" : ""}`}
+          className={`delete-button ${editIndex === index ? "hidden" : ""}`}
           onClick={() => {
-            onDeleteClick(taskIndex)
-            onEditIndexClick(-1);
+            if (window.confirm('Are you sure you want to delete this item?')) {
+              deleteTask(index)
+              setEditIndex(-1);
+            }
           }}
         >
           🗑️
         </button>
         <button
-          className={`edit-button ${onEditTaskIndex === taskIndex ? "hidden" : ""}`}
+          className={`edit-button ${editIndex === index ? "hidden" : ""}`}
           onClick={() => {
-            onEditIndexClick(taskIndex);
-            onEditTextClick(taskItem.text);
-            onEditDescClick(taskItem.description);
-            onEditQtyClick(taskItem.quantity);
+            setEditIndex(index);
+            setEditText(task.text);
+            setEditDesc(task.description);
+            setEditQty(task.quantity);
           }}
         >
           ✏️
         </button>
 
-        {onEditTaskIndex === taskIndex && (
+        {editIndex === index && (
           <div className="edit-task">
             <div className="edit-title">
-              <input className="input-field title" value={editTextValue} placeholder="Add task" type='text' onChange={(e) => onEditTextClick(e.target.value)}/>
+              <input className="input-field title" value={editText} placeholder="Add task" type='text' onChange={(e) => setEditText(e.target.value)}/>
               <div>
-                <button className="cancel-button" onClick={() => onEditIndexClick(-1)}>✖️</button>
+                <button className="cancel-button" onClick={() => setEditIndex(-1)}>✖️</button>
                 <button className="save-button" onClick={async () => {
-                  if (editTextValue.trim("") === "") {
-                    onEditIndexClick(-1);
+                  if (editText.trim("") === "") {
+                    setEditIndex(-1);
                   } else {
-                    const response = await fetch(`http://127.0.0.1:5000/tasks/edit/${taskIndex}`, {
+                    const qtyToSend = !editQty ? 0 : editQty;
+                    const response = await fetch(`http://127.0.0.1:5000/tasks/edit/${index}`, {
                       method: 'POST',
                       headers: {
                         'Content-Type': 'application/json'
                       },
-                      body: JSON.stringify([editTextValue, editDescValue, editQtyValue])
+                      body: JSON.stringify([editText, editDesc, qtyToSend])
                     });
                     const data = await response.json();
-                    saveEditedTask(data);
-                    onEditIndexClick(-1);
+                    setTasks(data);
+                    setEditIndex(-1);
                   }
                 }}>✔️</button>
               </div>
             </div>
             <div className="description-container">
-              <textarea className="input-field description" value={editDescValue} placeholder="Add description" type='text' onChange={(e) => onEditDescClick(e.target.value)}/>
+              <textarea className="input-field description" value={editDesc} placeholder="Add description" type='text' onChange={(e) => setEditDesc(e.target.value)}/>
             </div>
             <div className="quantity-container">
               <label className="quantity-label" for="quantity-field">Quantity:</label>
-              <input className="input-field quantity" id="quantity-field" type="number" placeholder="0" value={editQtyValue} onChange={(e) => onEditQtyClick(e.target.value)}/>
+              <input className="input-field quantity" id="quantity-field" type="number" placeholder="0" value={editQty} onChange={(e) => setEditQty(e.target.value)}/>
             </div>
           </div>
         )}
 
-        <div className={`extra-info-container ${onEditTaskIndex === taskIndex ? "hidden" : ""}`}>
-          {taskItem.quantity > 0 ? (
+        <div className={`extra-info-container ${editIndex === index ? "hidden" : ""}`}>
+          {task.quantity > 0 ? (
           <div className="quantity">
-            <span className={`quantity-text ${taskItem.finished === "complete" ? "crossed" : ""}`}>Qty: {taskItem.quantity}</span>
+            <span className={`quantity-text ${task.finished === "complete" ? "crossed" : ""}`}>Qty: {task.quantity}</span>
           </div>
           ) : (<></>)}
-          {taskItem.description ? (
-          <div className={`description ${taskItem.finished === "complete" ? "crossed" : ""}`} key={taskIndex}>
+          {task.description ? (
+          <div className={`description ${task.finished === "complete" ? "crossed" : ""}`} key={index}>
             <div className='description-box'>
-              <span className='description-text'>{taskItem.description}</span>
+              <span className='description-text'>{task.description}</span>
             </div>
           </div>
           ) : (<></>)}

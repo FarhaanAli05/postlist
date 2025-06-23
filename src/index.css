@@ -207,6 +207,11 @@ li {
   border-radius: 5px;
 }
 
+.task-input-container {
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
 .quantity-label {
   font-weight: normal;
   font-size: 20px;
@@ -265,4 +270,40 @@ li {
 
 .edit-task {
   width: 100%;
+}
+
+.new-task-extra-info {
+  width: 395px;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.add-description, 
+.add-quantity {
+  color: rgb(200, 200, 200);
+  text-decoration: underline;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 16px;
+}
+
+.input-field.description.new-task {
+  margin-top: 10px;
+  box-sizing: border-box;
+  margin-top: 0;
+  height: 70px;
+  margin-bottom: 10px;
+}
+
+.quantity-label-new-task {
+  color: rgb(200, 200, 200);
+  margin-right: 10px;
+}
+
+.quantity-new-task {
+  align-items: center;
+  display: flex;
 }

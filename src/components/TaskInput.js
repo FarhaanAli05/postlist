@@ -1,17 +1,17 @@
-function TaskInput({inputValue, onInputChange, onAddClick, handleKeyDown}) {
+function TaskInput({inputValue, handleInputChange, addTask, handleKeyDown}) {
   return (
-    <div>
+    <div className="task-input-container">
       <input
         type="text"
         placeholder="Enter a task..."
         value={inputValue}
-        onChange={onInputChange}
-        onKeyDown={handleKeyDown(onAddClick)}
+        onChange={handleInputChange}
+        onKeyDown={handleKeyDown(addTask)}
       />
 
       <button
         className="add-button"
-        onClick={onAddClick}
+        onClick={addTask}
       >
         +
       </button>

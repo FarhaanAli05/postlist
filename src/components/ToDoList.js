@@ -1,15 +1,17 @@
 import {useState, useEffect} from 'react';
 import TaskInput from './TaskInput.js';
-import TaskItem from './TaskItem.js';
+import TaskItems from './TaskItems.js';
+import TaskExtraInfo from './TaskExtraInfo.js';
 
 function ToDoList() {
-  // const [tasks, setTasks] = useState([{'text': "Go to the gym", 'finished': "incomplete"}, {'text': "Have breakfast", 'finished': "incomplete"}, {'text': "Begin homework", 'finished': "incomplete"}]);
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState({});
   const [editIndex, setEditIndex] = useState(-1);
   const [editText, setEditText] = useState("");
   const [editDesc, setEditDesc] = useState("");
   const [editQty, setEditQty] = useState(0);
+  const [isAddDesc, setIsAddDesc] = useState(false);
+  const [isAddQty, setIsAddQty] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -21,7 +23,7 @@ function ToDoList() {
   }, []);
 
   function handleInputChange(e) {
-    setNewTask({text: e.target.value, finished: 'incomplete'});
+    setNewTask({text: e.target.value, finished: 'incomplete', description: newTask.description, quantity: newTask.quantity});
   }
 
   const createEnterKeyHandler = (callbackFunction) => (e) => {
@@ -32,16 +34,19 @@ function ToDoList() {
 
   async function addTask() {
     if (newTask.text && newTask.text.trim() !== "") {
+      const safeTask = {...newTask, quantity: !newTask.quantity ? 0 : newTask.quantity}
       const response = await fetch('http://127.0.0.1:5000/tasks', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(newTask)
+        body: JSON.stringify(safeTask)
       });
       const data = await response.json();
       setTasks(data);
-      setNewTask({text: "", finished: 'incomplete'});
+      setNewTask({text: "", finished: 'incomplete', description: '', quantity: 0});
+      setIsAddDesc(false);
+      setIsAddQty(false);
     }
   }
 
@@ -52,24 +57,6 @@ function ToDoList() {
     const updatedTasks = tasks.filter((_, i) => i !== index);
     setTasks(updatedTasks);
   }
-
-/*
-  function moveTaskUp(index) {
-    if (index > 0) {
-      const updatedTasks = [...tasks];
-      [updatedTasks[index], updatedTasks[index - 1]] = [updatedTasks[index - 1], updatedTasks[index]];
-      setTasks(updatedTasks);
-    }
-  }
-
-  function moveTaskDown(index) {
-    if (index < tasks.length - 1) {
-      const updatedTasks = [...tasks];
-      [updatedTasks[index], updatedTasks[index + 1]] = [updatedTasks[index + 1], updatedTasks[index]];
-      setTasks(updatedTasks);
-    }
-  }
-  */
 
   async function finishTask(index) {
     const response = await fetch(`http://127.0.0.1:5000/tasks/${index}`, {
@@ -85,18 +72,35 @@ function ToDoList() {
 
       <TaskInput 
         inputValue={newTask.text}
-        onInputChange={handleInputChange}
-        onAddClick={addTask}
+        handleInputChange={handleInputChange}
+        addTask={addTask}
         handleKeyDown={createEnterKeyHandler}
       />
 
-      <ol>
-        {tasks.map((task, index) => {
-          return (
-            <TaskItem taskItem={task} taskIndex={index} onFinishClick={finishTask} onDeleteClick={deleteTask} onEditIndexClick={setEditIndex} onEditTextClick={setEditText} onEditTaskIndex={editIndex} editTextValue={editText} tasksList={tasks} saveEditedTask={setTasks} onEditDescClick={setEditDesc} editDescValue={editDesc} onEditQtyClick={setEditQty} editQtyValue={editQty} />
-          );
-        })}
-      </ol>
+      <TaskExtraInfo 
+        newTask={newTask}
+        setNewTask={setNewTask}
+        isAddDesc={isAddDesc}
+        setIsAddDesc={setIsAddDesc}
+        isAddQty={isAddQty}
+        setIsAddQty={setIsAddQty}
+      />
+
+      <TaskItems 
+        tasks={tasks}
+        finishTask={finishTask} 
+        deleteTask={deleteTask} 
+        setEditIndex={setEditIndex} 
+        setEditText={setEditText} 
+        editIndex={editIndex} 
+        editText={editText} 
+        tasksList={tasks} 
+        setTasks={setTasks} 
+        setEditDesc={setEditDesc} 
+        editDesc={editDesc} 
+        setEditQty={setEditQty} 
+        editQty={editQty}
+      />
     </div>
   );
 }
