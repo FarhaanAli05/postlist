@@ -1,9 +1,10 @@
-import {useState, useEffect} from 'react';
-import TaskInput from './TaskInput.js';
-import TaskItems from './TaskItems.js';
-import TaskExtraInfo from './TaskExtraInfo.js';
+import { useState, useEffect } from 'react';
+import { NavLink } from 'react-router';
+import TaskInput from '../components/TaskInput.js';
+import TaskItems from '../components/TaskItems.js';
+import TaskExtraInfo from '../components/TaskExtraInfo.js';
 
-function ToDoList() {
+function HomePage({ isSignedIn, username }) {
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState({});
   const [editIndex, setEditIndex] = useState(-1);
@@ -23,7 +24,7 @@ function ToDoList() {
   }, []);
 
   function handleInputChange(e) {
-    setNewTask({text: e.target.value, finished: 'incomplete', description: newTask.description, quantity: newTask.quantity});
+    setNewTask({ text: e.target.value, finished: 'incomplete', description: newTask.description, quantity: newTask.quantity });
   }
 
   const createEnterKeyHandler = (callbackFunction) => (e) => {
@@ -34,7 +35,7 @@ function ToDoList() {
 
   async function addTask() {
     if (newTask.text && newTask.text.trim() !== "") {
-      const safeTask = {...newTask, quantity: !newTask.quantity ? 0 : newTask.quantity}
+      const safeTask = { ...newTask, quantity: !newTask.quantity ? 0 : newTask.quantity }
       const response = await fetch('http://127.0.0.1:5000/tasks', {
         method: 'POST',
         headers: {
@@ -44,7 +45,7 @@ function ToDoList() {
       });
       const data = await response.json();
       setTasks(data);
-      setNewTask({text: "", finished: 'incomplete', description: '', quantity: 0});
+      setNewTask({ text: "", finished: 'incomplete', description: '', quantity: 0 });
       setIsAddDesc(false);
       setIsAddQty(false);
     }
@@ -68,16 +69,27 @@ function ToDoList() {
 
   return (
     <div className="to-do-list">
+      <title>To-Do List</title>
+
+      {!isSignedIn ? (
+        <NavLink to="/login" className="login-link">Sign in</NavLink>
+      ) : (
+        <>
+          <span>👤 {username} </span>
+          <a href="">Log out</a>
+        </>
+      )}
+
       <h1>To-Do List</h1>
 
-      <TaskInput 
+      <TaskInput
         inputValue={newTask.text}
         handleInputChange={handleInputChange}
         addTask={addTask}
         handleKeyDown={createEnterKeyHandler}
       />
 
-      <TaskExtraInfo 
+      <TaskExtraInfo
         newTask={newTask}
         setNewTask={setNewTask}
         isAddDesc={isAddDesc}
@@ -86,23 +98,23 @@ function ToDoList() {
         setIsAddQty={setIsAddQty}
       />
 
-      <TaskItems 
+      <TaskItems
         tasks={tasks}
-        finishTask={finishTask} 
-        deleteTask={deleteTask} 
-        setEditIndex={setEditIndex} 
-        setEditText={setEditText} 
-        editIndex={editIndex} 
-        editText={editText} 
-        tasksList={tasks} 
-        setTasks={setTasks} 
-        setEditDesc={setEditDesc} 
-        editDesc={editDesc} 
-        setEditQty={setEditQty} 
+        finishTask={finishTask}
+        deleteTask={deleteTask}
+        setEditIndex={setEditIndex}
+        setEditText={setEditText}
+        editIndex={editIndex}
+        editText={editText}
+        tasksList={tasks}
+        setTasks={setTasks}
+        setEditDesc={setEditDesc}
+        editDesc={editDesc}
+        setEditQty={setEditQty}
         editQty={editQty}
       />
     </div>
   );
 }
 
-export default ToDoList;
+export default HomePage;
