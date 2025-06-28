@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { NavLink } from 'react-router';
+import axios from 'axios';
 import TaskInput from '../components/TaskInput.js';
 import TaskItems from '../components/TaskItems.js';
 import TaskExtraInfo from '../components/TaskExtraInfo.js';
 
-function HomePage({ isSignedIn, username }) {
+function HomePage({ isSignedIn, usernameOrEmail }) {
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState({});
   const [editIndex, setEditIndex] = useState(-1);
@@ -13,6 +14,7 @@ function HomePage({ isSignedIn, username }) {
   const [editQty, setEditQty] = useState(0);
   const [isAddDesc, setIsAddDesc] = useState(false);
   const [isAddQty, setIsAddQty] = useState(false);
+  const [loggedInUsername, setLoggedInUsername] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -22,6 +24,10 @@ function HomePage({ isSignedIn, username }) {
     }
     fetchData();
   }, []);
+
+  useEffect(() => {
+    getUsername();
+  }, [usernameOrEmail]);
 
   function handleInputChange(e) {
     setNewTask({ text: e.target.value, finished: 'incomplete', description: newTask.description, quantity: newTask.quantity });
@@ -67,15 +73,22 @@ function HomePage({ isSignedIn, username }) {
     setTasks(data);
   }
 
+  async function getUsername() {
+    const response = await axios.post('http://localhost:8000/api/getuser/', {
+      username: usernameOrEmail
+    });
+    setLoggedInUsername(response.data.username);
+  }
+
   return (
     <div className="to-do-list">
       <title>To-Do List</title>
 
       {!isSignedIn ? (
-        <NavLink to="/login" className="login-link">Sign in</NavLink>
+        <NavLink to="/signup" className="signup-link">Sign in</NavLink>
       ) : (
         <>
-          <span>👤 {username} </span>
+          <span>👤 {loggedInUsername} </span>
           <a href="">Log out</a>
         </>
       )}
