@@ -2,9 +2,7 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { useNavigate, NavLink } from 'react-router';
 
-function LoginPage({ setIsSignedIn, usernameOrEmail, setUsernameOrEmail }) {
-  const [password, setPassword] = useState('');
-
+function LoginPage({ setIsSignedIn, usernameOrEmail, setUsernameOrEmail, password, setPassword }) {
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -24,7 +22,7 @@ function LoginPage({ setIsSignedIn, usernameOrEmail, setUsernameOrEmail }) {
     event.preventDefault();
 
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/login/', {
+      const response = await axios.post('http://localhost:8000/api/login/', {
         username: usernameOrEmail,
         password
       });

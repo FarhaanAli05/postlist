@@ -1,4 +1,4 @@
-function TaskItem({task, index, finishTask, deleteTask, setEditIndex, setEditText, editIndex, editText, tasks, setTasks, editDesc, setEditDesc, editQty, setEditQty}) {
+function TaskItem({ task, index, finishTask, deleteTask, setEditIndex, setEditText, editIndex, editText, tasks, setTasks, editDesc, setEditDesc, editQty, setEditQty }) {
   return (
     <div className="to-do-list-item-container">
       <span className="serial-number">{index + 1}. </span>
@@ -38,7 +38,7 @@ function TaskItem({task, index, finishTask, deleteTask, setEditIndex, setEditTex
         {editIndex === index && (
           <div className="edit-task">
             <div className="edit-title">
-              <input className="input-field title" value={editText} placeholder="Add task" type='text' onChange={(e) => setEditText(e.target.value)}/>
+              <input className="input-field title" value={editText} placeholder="Add task" type='text' onChange={(e) => setEditText(e.target.value)} />
               <div>
                 <button className="cancel-button" onClick={() => setEditIndex(-1)}>✖️</button>
                 <button className="save-button" onClick={async () => {
@@ -46,12 +46,13 @@ function TaskItem({task, index, finishTask, deleteTask, setEditIndex, setEditTex
                     setEditIndex(-1);
                   } else {
                     const qtyToSend = !editQty ? 0 : editQty;
-                    const response = await fetch(`http://127.0.0.1:5000/tasks/edit/${index}`, {
+                    const response = await fetch(`http://localhost:8000/api/tasks/edit/${index}/`, {
                       method: 'POST',
                       headers: {
                         'Content-Type': 'application/json'
                       },
-                      body: JSON.stringify([editText, editDesc, qtyToSend])
+                      body: JSON.stringify(
+                        { text: editText, finished: '', description: editDesc, quantity: qtyToSend })
                     });
                     const data = await response.json();
                     setTasks(data);
@@ -61,27 +62,27 @@ function TaskItem({task, index, finishTask, deleteTask, setEditIndex, setEditTex
               </div>
             </div>
             <div className="description-container">
-              <textarea className="input-field description" value={editDesc} placeholder="Add description" type='text' onChange={(e) => setEditDesc(e.target.value)}/>
+              <textarea className="input-field description" value={editDesc} placeholder="Add description" type='text' onChange={(e) => setEditDesc(e.target.value)} />
             </div>
             <div className="quantity-container">
               <label className="quantity-label" for="quantity-field">Quantity:</label>
-              <input className="input-field quantity" id="quantity-field" type="number" placeholder="0" value={editQty} onChange={(e) => setEditQty(e.target.value)}/>
+              <input className="input-field quantity" id="quantity-field" type="number" placeholder="0" value={editQty} onChange={(e) => setEditQty(e.target.value)} />
             </div>
           </div>
         )}
 
         <div className={`extra-info-container ${editIndex === index ? "hidden" : ""}`}>
           {task.quantity > 0 ? (
-          <div className="quantity">
-            <span className={`quantity-text ${task.finished === "complete" ? "crossed" : ""}`}>Qty: {task.quantity}</span>
-          </div>
+            <div className="quantity">
+              <span className={`quantity-text ${task.finished === "complete" ? "crossed" : ""}`}>Qty: {task.quantity}</span>
+            </div>
           ) : (<></>)}
           {task.description ? (
-          <div className={`description ${task.finished === "complete" ? "crossed" : ""}`} key={index}>
-            <div className='description-box'>
-              <span className='description-text'>{task.description}</span>
+            <div className={`description ${task.finished === "complete" ? "crossed" : ""}`} key={index}>
+              <div className='description-box'>
+                <span className='description-text'>{task.description}</span>
+              </div>
             </div>
-          </div>
           ) : (<></>)}
         </div>
       </li>

@@ -2,10 +2,7 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { useNavigate, NavLink } from 'react-router';
 
-function SignUpPage({ setIsSignedIn, username, setUsername }) {
-  const [password, setPassword] = useState('');
-  const [email, setEmail] = useState('');
-
+function SignUpPage({ setIsSignedIn, username, setUsername, password, setPassword, email, setEmail }) {
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -45,6 +42,8 @@ function SignUpPage({ setIsSignedIn, username, setUsername }) {
         alert('Username already exists. Please use a different username.');
       } else if (errorMessage === "Email already in use") {
         alert('Email already in use. Try logging in.');
+      } else if (errorMessage === "Password cannot be less than 8 characters") {
+        alert('Password must be at least 8 characters long.');
       } else {
         alert('An error occurred. Please try again later.');
       }

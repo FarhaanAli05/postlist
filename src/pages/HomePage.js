@@ -5,7 +5,7 @@ import TaskInput from '../components/TaskInput.js';
 import TaskItems from '../components/TaskItems.js';
 import TaskExtraInfo from '../components/TaskExtraInfo.js';
 
-function HomePage({ isSignedIn, usernameOrEmail }) {
+function HomePage({ isSignedIn, usernameOrEmail, setUsernameOrEmail, setPassword, setEmail }) {
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState({});
   const [editIndex, setEditIndex] = useState(-1);
@@ -18,11 +18,17 @@ function HomePage({ isSignedIn, usernameOrEmail }) {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch('http://127.0.0.1:5000/tasks');
+      const response = await fetch('http://localhost:8000/api/tasks/');
       const data = await response.json();
       setTasks(data);
     }
     fetchData();
+
+    if (!isSignedIn) {
+      setUsernameOrEmail('');
+      setPassword('');
+      setEmail('');
+    }
   }, []);
 
   useEffect(() => {
@@ -42,7 +48,7 @@ function HomePage({ isSignedIn, usernameOrEmail }) {
   async function addTask() {
     if (newTask.text && newTask.text.trim() !== "") {
       const safeTask = { ...newTask, quantity: !newTask.quantity ? 0 : newTask.quantity }
-      const response = await fetch('http://127.0.0.1:5000/tasks', {
+      const response = await fetch('http://localhost:8000/api/tasks/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -58,7 +64,7 @@ function HomePage({ isSignedIn, usernameOrEmail }) {
   }
 
   async function deleteTask(index) {
-    await fetch(`http://127.0.0.1:5000/tasks/${index}`, {
+    await fetch(`http://localhost:8000/api/tasks/${index}/`, {
       method: 'DELETE'
     });
     const updatedTasks = tasks.filter((_, i) => i !== index);
@@ -66,7 +72,7 @@ function HomePage({ isSignedIn, usernameOrEmail }) {
   }
 
   async function finishTask(index) {
-    const response = await fetch(`http://127.0.0.1:5000/tasks/${index}`, {
+    const response = await fetch(`http://localhost:8000/api/tasks/${index}/`, {
       method: 'POST'
     });
     const data = await response.json();
@@ -74,10 +80,12 @@ function HomePage({ isSignedIn, usernameOrEmail }) {
   }
 
   async function getUsername() {
-    const response = await axios.post('http://localhost:8000/api/getuser/', {
-      username: usernameOrEmail
-    });
-    setLoggedInUsername(response.data.username);
+    if (isSignedIn) {
+      const response = await axios.post('http://localhost:8000/api/getuser/', {
+        username: usernameOrEmail
+      });
+      setLoggedInUsername(response.data.username);
+    }
   }
 
   return (
