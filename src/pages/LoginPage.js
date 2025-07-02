@@ -1,8 +1,10 @@
-import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { useNavigate, NavLink } from 'react-router';
+import Cookies from 'js-cookie';
+import axios from 'axios';
+import getUser from '../utils/getUser';
 
-function LoginPage({ setIsSignedIn, usernameOrEmail, setUsernameOrEmail, password, setPassword }) {
+function LoginPage({ isSignedIn, setIsSignedIn, usernameOrEmail, setUsernameOrEmail, password, setPassword }) {
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,12 +28,21 @@ function LoginPage({ setIsSignedIn, usernameOrEmail, setUsernameOrEmail, passwor
         username: usernameOrEmail,
         password
       });
-
       if (response.data.access) {
-        localStorage.setItem('access_token', response.data.access);
-        localStorage.setItem('refresh_token', response.data.refresh);
+        const access = response.data.access;
+        const refresh = response.data.refresh;
+
+        Cookies.set('access_token', access, { secure: true, sameSite: 'strict' });
+        Cookies.set('refresh_token', refresh, { secure: true, sameSite: 'strict' });
+
         alert("Login successful!");
+
         setIsSignedIn(true);
+        Cookies.set('is_signed_in', 'true', { expires: 7, secure: true, sameSite: 'Strict' });
+
+        const username = await getUser(usernameOrEmail);
+        Cookies.set('username', username, { secure: true, sameSite: 'strict' });
+
         navigate('/');
       }
     } catch (error) {

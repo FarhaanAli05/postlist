@@ -2,7 +2,8 @@ from django.http import JsonResponse
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -10,26 +11,30 @@ from .models import Task
 from .services import get_tasks
 
 @api_view(['GET', 'POST'])
+@permission_classes([IsAuthenticated])
 def get_or_add_task(request):
     if request.method == 'GET':
-        return get_tasks()
+        return get_tasks(request)
     elif request.method == 'POST':
         text = request.data.get('text')
         finished = request.data.get('finished', 'incomplete')
         description = request.data.get('description', '')
         quantity = request.data.get('quantity', 0)
         Task.objects.create(
+            user=request.user,
             text=text,
             finished=finished,
             description=description,
             quantity=quantity
         )
-        return get_tasks()
+        return get_tasks(request)
 
 @api_view(['POST', 'DELETE'])
+@permission_classes([IsAuthenticated])
 def finish_or_delete_task(request, index):
     if request.method == 'POST':
-        tasks_ordered = Task.objects.order_by('id') # Because, this is a small application, I am ordering by ID. Generally, it is preferred to identify row in table using primary key.
+        user_tasks = Task.objects.filter(user=request.user)
+        tasks_ordered = user_tasks.order_by('id') # Because, this is a small application, I am ordering by ID. Generally, it is preferred to identify row in table using primary key.
         matching_task = tasks_ordered[index]
         matching_task_dict = matching_task.__dict__
         if matching_task_dict['finished'] == 'complete':
@@ -39,16 +44,19 @@ def finish_or_delete_task(request, index):
         for key, value in matching_task_dict.items():
             setattr(matching_task, key, value)
         matching_task.save(update_fields=['finished'])
-        return get_tasks()
+        return get_tasks(request)
     elif request.method == 'DELETE':
-        tasks_ordered = Task.objects.order_by('id')
+        user_tasks = Task.objects.filter(user=request.user)
+        tasks_ordered = user_tasks.order_by('id')
         matching_task = tasks_ordered[index]
         matching_task.delete()
-        return get_tasks()
+        return get_tasks(request)
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def edit_task(request, index):
-    tasks_ordered = Task.objects.order_by('id')
+    user_tasks = Task.objects.filter(user=request.user)
+    tasks_ordered = user_tasks.order_by('id')
     matching_task = tasks_ordered[index]
     newText = request.data.get('text')
     newDesc = request.data.get('description', '')
@@ -60,7 +68,7 @@ def edit_task(request, index):
     for key, value in matching_task_dict.items():
         setattr(matching_task, key, value)
     matching_task.save(update_fields=['text', 'description', 'quantity'])
-    return get_tasks()
+    return get_tasks(request)
 
 @api_view(['POST'])
 def login_user(request):

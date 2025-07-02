@@ -1,3 +1,5 @@
+import Cookies from "js-cookie";
+
 function TaskItem({ task, index, finishTask, deleteTask, setEditIndex, setEditText, editIndex, editText, tasks, setTasks, editDesc, setEditDesc, editQty, setEditQty }) {
   return (
     <div className="to-do-list-item-container">
@@ -46,10 +48,12 @@ function TaskItem({ task, index, finishTask, deleteTask, setEditIndex, setEditTe
                     setEditIndex(-1);
                   } else {
                     const qtyToSend = !editQty ? 0 : editQty;
+                    const token = Cookies.get('access_token');
                     const response = await fetch(`http://localhost:8000/api/tasks/edit/${index}/`, {
                       method: 'POST',
                       headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
                       },
                       body: JSON.stringify(
                         { text: editText, finished: '', description: editDesc, quantity: qtyToSend })

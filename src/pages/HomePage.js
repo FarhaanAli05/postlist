@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { NavLink } from 'react-router';
-import axios from 'axios';
+import Cookies from 'js-cookie';
 import TaskInput from '../components/TaskInput.js';
 import TaskItems from '../components/TaskItems.js';
 import TaskExtraInfo from '../components/TaskExtraInfo.js';
 
-function HomePage({ isSignedIn, usernameOrEmail, setUsernameOrEmail, setPassword, setEmail }) {
+function HomePage({ isSignedIn, setIsSignedIn, usernameOrEmail, setUsernameOrEmail, setPassword, setEmail }) {
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState({});
   const [editIndex, setEditIndex] = useState(-1);
@@ -18,13 +18,24 @@ function HomePage({ isSignedIn, usernameOrEmail, setUsernameOrEmail, setPassword
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch('http://localhost:8000/api/tasks/');
+      const token = Cookies.get('access_token');
+
+      const response = await fetch('http://localhost:8000/api/tasks/', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
       const data = await response.json();
       setTasks(data);
     }
     fetchData();
 
-    if (!isSignedIn) {
+    if (Cookies.get('is_signed_in')) {
+      setIsSignedIn(true);
+      setLoggedInUsername(Cookies.get('username'));
+    } else {
       setUsernameOrEmail('');
       setPassword('');
       setEmail('');
@@ -32,7 +43,7 @@ function HomePage({ isSignedIn, usernameOrEmail, setUsernameOrEmail, setPassword
   }, []);
 
   useEffect(() => {
-    getUsername();
+    setLoggedInUsername(Cookies.get('username'));
   }, [usernameOrEmail]);
 
   function handleInputChange(e) {
@@ -47,10 +58,12 @@ function HomePage({ isSignedIn, usernameOrEmail, setUsernameOrEmail, setPassword
 
   async function addTask() {
     if (newTask.text && newTask.text.trim() !== "") {
+      const token = Cookies.get('access_token');
       const safeTask = { ...newTask, quantity: !newTask.quantity ? 0 : newTask.quantity }
       const response = await fetch('http://localhost:8000/api/tasks/', {
         method: 'POST',
         headers: {
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(safeTask)
@@ -64,28 +77,27 @@ function HomePage({ isSignedIn, usernameOrEmail, setUsernameOrEmail, setPassword
   }
 
   async function deleteTask(index) {
+    const token = Cookies.get('access_token');
     await fetch(`http://localhost:8000/api/tasks/${index}/`, {
-      method: 'DELETE'
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
     });
     const updatedTasks = tasks.filter((_, i) => i !== index);
     setTasks(updatedTasks);
   }
 
   async function finishTask(index) {
+    const token = Cookies.get('access_token');
     const response = await fetch(`http://localhost:8000/api/tasks/${index}/`, {
-      method: 'POST'
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
     });
     const data = await response.json();
     setTasks(data);
-  }
-
-  async function getUsername() {
-    if (isSignedIn) {
-      const response = await axios.post('http://localhost:8000/api/getuser/', {
-        username: usernameOrEmail
-      });
-      setLoggedInUsername(response.data.username);
-    }
   }
 
   return (
@@ -97,7 +109,12 @@ function HomePage({ isSignedIn, usernameOrEmail, setUsernameOrEmail, setPassword
       ) : (
         <>
           <span>👤 {loggedInUsername} </span>
-          <a href="">Log out</a>
+          <a href="" onClick={() => {
+            Cookies.remove('access_token');
+            Cookies.remove('refresh_token');
+            Cookies.remove('username');
+            Cookies.remove('is_signed_in');
+          }}>Log out</a>
         </>
       )}
 
