@@ -1,6 +1,8 @@
-import axios from 'axios';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useNavigate, NavLink } from 'react-router';
+import Cookies from 'js-cookie';
+import axios from 'axios';
+import getUser from '../utils/getUser';
 
 function SignUpPage({ setIsSignedIn, username, setUsername, password, setPassword, email, setEmail }) {
   const navigate = useNavigate();
@@ -27,14 +29,26 @@ function SignUpPage({ setIsSignedIn, username, setUsername, password, setPasswor
     event.preventDefault();
 
     try {
-      await axios.post('http://localhost:8000/api/register/', {
+      const response = await axios.post('http://localhost:8000/api/register/', {
         username,
         password,
         email
       });
 
+      const access = response.data.access;
+      const refresh = response.data.refresh;
+
+      Cookies.set('access_token', access, { secure: true, sameSite: 'strict' });
+      Cookies.set('refresh_token', refresh, { secure: true, sameSite: 'strict' });
+
       alert("Account created successfully.");
+
       setIsSignedIn(true);
+      Cookies.set('is_signed_in', 'true', { expires: 7, secure: true, sameSite: 'Strict' });
+
+      const matchingUsername = await getUser(username);
+      Cookies.set('username', matchingUsername, { secure: true, sameSite: 'strict' });
+
       navigate('/');
     } catch (error) {
       const errorMessage = error.response?.data?.error;

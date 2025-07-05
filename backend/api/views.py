@@ -117,7 +117,22 @@ def register_user(request):
         password=make_password(password)
     )
 
-    return Response({'message': 'User created successfully'}, status=status.HTTP_201_CREATED)
+    user_obj = (
+        User.objects.filter(username=username).first() or
+        User.objects.filter(email=email).first()
+    )
+
+    user = authenticate(username=user_obj.username, password=password) if user_obj else None
+
+    if user:
+        refresh = RefreshToken.for_user(user)
+        return Response({
+            'message': 'User created successfully',
+            'access': str(refresh.access_token),
+            'refresh': str(refresh)
+        }, status=status.HTTP_201_CREATED)
+    else:
+        return Response({'error': 'Could not create user'})
 
 @api_view(['POST'])
 def get_user(request):

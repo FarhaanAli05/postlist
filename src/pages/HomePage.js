@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { NavLink } from 'react-router';
 import Cookies from 'js-cookie';
+import axios from 'axios';
 import TaskInput from '../components/TaskInput.js';
 import TaskItems from '../components/TaskItems.js';
 import TaskExtraInfo from '../components/TaskExtraInfo.js';
+import refreshAccessToken from '../utils/refreshAccessToken.js';
 
 function HomePage({ isSignedIn, setIsSignedIn, usernameOrEmail, setUsernameOrEmail, setPassword, setEmail }) {
   const [tasks, setTasks] = useState([]);
@@ -18,17 +20,33 @@ function HomePage({ isSignedIn, setIsSignedIn, usernameOrEmail, setUsernameOrEma
 
   useEffect(() => {
     const fetchData = async () => {
-      const token = Cookies.get('access_token');
-
-      const response = await fetch('http://localhost:8000/api/tasks/', {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
+      let token = Cookies.get('access_token');
+      try {
+        const response = await axios.get('http://localhost:8000/api/tasks/', {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        setTasks(response.data);
+      } catch (error) {
+        if (error.response && error.response.status === 401) {
+          const newAccessToken = await refreshAccessToken();
+          Cookies.set('access_token', newAccessToken);
+          token = Cookies.get('access_token');
+          if (newAccessToken) {
+            const retriedResponse = await axios.get('http://localhost:8000/api/tasks/', {
+              headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+              }
+            });
+            setTasks(retriedResponse.data);
+          } else {
+            throw new Error('Failed to refresh access token. Please log in again');
+          }
         }
-      });
-      const data = await response.json();
-      setTasks(data);
+      }
     }
     fetchData();
 
@@ -58,46 +76,89 @@ function HomePage({ isSignedIn, setIsSignedIn, usernameOrEmail, setUsernameOrEma
 
   async function addTask() {
     if (newTask.text && newTask.text.trim() !== "") {
-      const token = Cookies.get('access_token');
+      let token = Cookies.get('access_token');
       const safeTask = { ...newTask, quantity: !newTask.quantity ? 0 : newTask.quantity }
-      const response = await fetch('http://localhost:8000/api/tasks/', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(safeTask)
-      });
-      const data = await response.json();
-      setTasks(data);
-      setNewTask({ text: "", finished: 'incomplete', description: '', quantity: 0 });
-      setIsAddDesc(false);
-      setIsAddQty(false);
+      try {
+        const response = await axios.post('http://localhost:8000/api/tasks/',
+          JSON.stringify(safeTask), {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        setTasks(response.data);
+        setNewTask({ text: "", finished: 'incomplete', description: '', quantity: 0 });
+        setIsAddDesc(false);
+        setIsAddQty(false);
+      } catch (error) {
+        if (error.response && error.response.status === 401) {
+          const newAccessToken = await refreshAccessToken();
+          Cookies.set('access_token', newAccessToken);
+          token = Cookies.get('access_token');
+          const retriedResponse = await axios.post('http://localhost:8000/api/tasks/',
+            JSON.stringify(safeTask), {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            }
+          });
+          setTasks(retriedResponse.data);
+          setNewTask({ text: "", finished: 'incomplete', description: '', quantity: 0 });
+          setIsAddDesc(false);
+          setIsAddQty(false);
+        }
+      }
     }
   }
 
   async function deleteTask(index) {
-    const token = Cookies.get('access_token');
-    await fetch(`http://localhost:8000/api/tasks/${index}/`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${token}`
+    let token = Cookies.get('access_token');
+    try {
+      await axios.delete(`http://localhost:8000/api/tasks/${index}/`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      const updatedTasks = tasks.filter((_, i) => i !== index);
+      setTasks(updatedTasks);
+    } catch (error) {
+      if (error.response && error.response === 401) {
+        const newAccessToken = await refreshAccessToken();
+        Cookies.set('access_token', newAccessToken);
+        token = Cookies.get('access_token');
+        await axios.delete(`http://localhost:8000/api/tasks/${index}/`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        const updatedTasks = tasks.filter((_, i) => i !== index);
+        setTasks(updatedTasks);
       }
-    });
-    const updatedTasks = tasks.filter((_, i) => i !== index);
-    setTasks(updatedTasks);
+    }
   }
 
   async function finishTask(index) {
-    const token = Cookies.get('access_token');
-    const response = await fetch(`http://localhost:8000/api/tasks/${index}/`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${token}`
+    let token = Cookies.get('access_token');
+    try {
+      const response = await axios.post(`http://localhost:8000/api/tasks/${index}/`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      setTasks(response.data);
+    } catch (error) {
+      if (error.response && error.response === 401) {
+        const newAccessToken = await refreshAccessToken();
+        Cookies.set('access_token', newAccessToken);
+        token = Cookies.get('access_token');
+        const retriedResponse = await axios.post(`http://localhost:8000/api/tasks/${index}/`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        setTasks(retriedResponse.data);
       }
-    });
-    const data = await response.json();
-    setTasks(data);
+    }
   }
 
   return (

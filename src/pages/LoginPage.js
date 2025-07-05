@@ -4,7 +4,7 @@ import Cookies from 'js-cookie';
 import axios from 'axios';
 import getUser from '../utils/getUser';
 
-function LoginPage({ isSignedIn, setIsSignedIn, usernameOrEmail, setUsernameOrEmail, password, setPassword }) {
+function LoginPage({ isSignedIn, setIsSignedIn, usernameOrEmail, setUsernameOrEmail, password, setPassword, setRefreshToken }) {
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -28,23 +28,22 @@ function LoginPage({ isSignedIn, setIsSignedIn, usernameOrEmail, setUsernameOrEm
         username: usernameOrEmail,
         password
       });
-      if (response.data.access) {
-        const access = response.data.access;
-        const refresh = response.data.refresh;
 
-        Cookies.set('access_token', access, { secure: true, sameSite: 'strict' });
-        Cookies.set('refresh_token', refresh, { secure: true, sameSite: 'strict' });
+      const access = response.data.access;
+      const refresh = response.data.refresh;
 
-        alert("Login successful!");
+      Cookies.set('access_token', access, { secure: true, sameSite: 'strict' });
+      Cookies.set('refresh_token', refresh, { secure: true, sameSite: 'strict' });
 
-        setIsSignedIn(true);
-        Cookies.set('is_signed_in', 'true', { expires: 7, secure: true, sameSite: 'Strict' });
+      alert("Login successful!");
 
-        const username = await getUser(usernameOrEmail);
-        Cookies.set('username', username, { secure: true, sameSite: 'strict' });
+      setIsSignedIn(true);
+      Cookies.set('is_signed_in', 'true', { expires: 7, secure: true, sameSite: 'strict' });
 
-        navigate('/');
-      }
+      const username = await getUser(usernameOrEmail);
+      Cookies.set('username', username, { secure: true, sameSite: 'strict' });
+
+      navigate('/');
     } catch (error) {
       const errorMessage = error.response?.data?.error;
       if (errorMessage === "Invalid credentials") {
