@@ -26,3 +26,4 @@ __pycache__/
 *.pyc
 
 db_layer.py
+*.sqlite3

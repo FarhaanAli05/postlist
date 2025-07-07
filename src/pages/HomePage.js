@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { NavLink } from 'react-router';
+import { useNavigate } from 'react-router';
 import Cookies from 'js-cookie';
 import axios from 'axios';
+import Header from '../components/Header.js';
 import TaskInput from '../components/TaskInput.js';
 import TaskItems from '../components/TaskItems.js';
 import TaskExtraInfo from '../components/TaskExtraInfo.js';
@@ -17,6 +18,8 @@ function HomePage({ isSignedIn, setIsSignedIn, usernameOrEmail, setUsernameOrEma
   const [isAddDesc, setIsAddDesc] = useState(false);
   const [isAddQty, setIsAddQty] = useState(false);
   const [loggedInUsername, setLoggedInUsername] = useState('');
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -43,7 +46,11 @@ function HomePage({ isSignedIn, setIsSignedIn, usernameOrEmail, setUsernameOrEma
             });
             setTasks(retriedResponse.data);
           } else {
-            throw new Error('Failed to refresh access token. Please log in again');
+            Cookies.remove('access_token');
+            Cookies.remove('refresh_token');
+            Cookies.remove('username');
+            Cookies.remove('is_signed_in');
+            navigate('/signup');
           }
         }
       }
@@ -114,25 +121,23 @@ function HomePage({ isSignedIn, setIsSignedIn, usernameOrEmail, setUsernameOrEma
   async function deleteTask(index) {
     let token = Cookies.get('access_token');
     try {
-      await axios.delete(`http://localhost:8000/api/tasks/${index}/`, {
+      const response = await axios.delete(`http://localhost:8000/api/tasks/${index}/`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
-      const updatedTasks = tasks.filter((_, i) => i !== index);
-      setTasks(updatedTasks);
+      setTasks(response.data);
     } catch (error) {
-      if (error.response && error.response === 401) {
+      if (error.response && error.response.status === 401) {
         const newAccessToken = await refreshAccessToken();
         Cookies.set('access_token', newAccessToken);
         token = Cookies.get('access_token');
-        await axios.delete(`http://localhost:8000/api/tasks/${index}/`, {
+        const retriedResponse = await axios.delete(`http://localhost:8000/api/tasks/${index}/`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
         });
-        const updatedTasks = tasks.filter((_, i) => i !== index);
-        setTasks(updatedTasks);
+        setTasks(retriedResponse.data);
       }
     }
   }
@@ -140,18 +145,18 @@ function HomePage({ isSignedIn, setIsSignedIn, usernameOrEmail, setUsernameOrEma
   async function finishTask(index) {
     let token = Cookies.get('access_token');
     try {
-      const response = await axios.post(`http://localhost:8000/api/tasks/${index}/`, {
+      const response = await axios.post(`http://localhost:8000/api/tasks/${index}/`, {}, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
       setTasks(response.data);
     } catch (error) {
-      if (error.response && error.response === 401) {
+      if (error.response && error.response.status === 401) {
         const newAccessToken = await refreshAccessToken();
         Cookies.set('access_token', newAccessToken);
         token = Cookies.get('access_token');
-        const retriedResponse = await axios.post(`http://localhost:8000/api/tasks/${index}/`, {
+        const retriedResponse = await axios.post(`http://localhost:8000/api/tasks/${index}/`, {}, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -165,19 +170,7 @@ function HomePage({ isSignedIn, setIsSignedIn, usernameOrEmail, setUsernameOrEma
     <div className="to-do-list">
       <title>To-Do List</title>
 
-      {!isSignedIn ? (
-        <NavLink to="/signup" className="signup-link">Sign in</NavLink>
-      ) : (
-        <>
-          <span>👤 {loggedInUsername} </span>
-          <a href="" onClick={() => {
-            Cookies.remove('access_token');
-            Cookies.remove('refresh_token');
-            Cookies.remove('username');
-            Cookies.remove('is_signed_in');
-          }}>Log out</a>
-        </>
-      )}
+      <Header isSignedIn={isSignedIn} loggedInUsername={loggedInUsername} />
 
       <h1>To-Do List</h1>
 

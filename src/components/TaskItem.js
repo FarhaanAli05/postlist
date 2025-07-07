@@ -63,7 +63,7 @@ function TaskItem({ task, index, finishTask, deleteTask, setEditIndex, setEditTe
                       setTasks(response.data);
                       setEditIndex(-1);
                     } catch (error) {
-                      if (error.response && error.response === 401) {
+                      if (error.response && error.response.status === 401) {
                         const newAccessToken = await refreshAccessToken();
                         Cookies.set('access_token', newAccessToken);
                         token = Cookies.get('access_token');

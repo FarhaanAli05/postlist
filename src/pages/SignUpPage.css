@@ -1,0 +1,76 @@
+.sign-up-page {
+  display: grid;
+  place-items: center;
+  height: 100vh;
+  grid-template-rows: 1fr 1fr 1fr;
+}
+
+.sign-up-page h3,
+.sign-up-page p,
+.sign-up-page .logo {
+  color: rgb(200, 200, 200);
+}
+
+.sign-up-page .logo {
+  font-size: 35px;
+}
+
+.sign-up-page h3 {
+  margin: 0;
+}
+
+.sign-up-page .login-link {
+  color: rgb(247, 247, 247);
+}
+
+.sign-up-form {
+  place-self: center;
+  padding: 30px 30px;
+  border-radius: 10px;
+  background-color: rgb(247, 247, 247);
+  display: grid;
+  place-items: center;
+  align-items: center;
+  min-width: 300px;
+}
+
+.sign-up-form input {
+  font-size: 16px;
+  background-color: hsl(0, 0%, 90%);
+  color: hsla(0, 0%, 0%, 0.8);
+  width: 300px;
+}
+
+.sign-up-form label {
+  color: hsla(0, 0%, 0%, 0.5);
+  font-size: 15px;
+}
+
+.sign-up-form .submit-button {
+  width: 100%;
+  height: 100%;
+  background-color: hsl(0, 0%, 10%);
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.1s;
+}
+
+.sign-up-form .submit-button:hover {
+  background-color: hsl(0, 0%, 20%);
+}
+
+.heading,
+.footing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.sign-up-page .footing {
+  margin-top: -80px;
+}
+
+.sign-up-page .heading {
+  margin-bottom: -10px;
+}

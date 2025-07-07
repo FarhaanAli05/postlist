@@ -3,6 +3,7 @@ import { useNavigate, NavLink } from 'react-router';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 import getUser from '../utils/getUser';
+import './LoginPage.css';
 
 function LoginPage({ isSignedIn, setIsSignedIn, usernameOrEmail, setUsernameOrEmail, password, setPassword, setRefreshToken }) {
   const navigate = useNavigate();
@@ -56,20 +57,28 @@ function LoginPage({ isSignedIn, setIsSignedIn, usernameOrEmail, setUsernameOrEm
 
   return (
     <>
-      <title>Login - To-Do List</title>
+      <div className="login-page">
+        <title>Login - To-Do List</title>
 
-      <h1><NavLink to="/" className="logo" style={{ textDecoration: 'none' }}>✔️ To-Do List</NavLink></h1>
-      <h3>Login</h3>
-      <form onSubmit={handleSubmit}>
-        <label for="username">Email or username:</label><br />
-        <input type="text" id="username" name="username" placeholder="Enter username" value={usernameOrEmail} onChange={handleUsernameChange} required /><br /><br />
-        <label for="password">Password:</label><br />
-        <input type="password" id="password" name="password" placeholder="Enter password" value={password} onChange={handlePasswordChange} required /><br /><br />
-        <input type="submit" value="Submit" />
-      </form>
+        <div className="heading">
+          <h2><NavLink to="/" className="logo" style={{ textDecoration: 'none' }}>✔️ To-Do List</NavLink></h2>
+          <h3>Login</h3>
+        </div>
+        <div className="login-form">
+          <form onSubmit={handleSubmit}>
+            <label for="username">Email or username:</label><br />
+            <input type="text" id="username" name="username" placeholder="Enter username" value={usernameOrEmail} onChange={handleUsernameChange} required /><br /><br />
+            <label for="password">Password:</label><br />
+            <input type="password" id="password" name="password" placeholder="Enter password" value={password} onChange={handlePasswordChange} required /><br /><br />
+            <input className="submit-button" type="submit" value="Log in" />
+          </form>
+        </div>
 
-      <p>Do not have an account?</p>
-      <NavLink to="/signup" className="signup-link">Create account</NavLink>
+        <div className="footing">
+          <p>Do not have an account?</p>
+          <NavLink to="/signup" className="signup-link">Create account</NavLink>
+        </div>
+      </div>
     </>
   );
 }

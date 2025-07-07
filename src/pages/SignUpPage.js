@@ -3,6 +3,7 @@ import { useNavigate, NavLink } from 'react-router';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 import getUser from '../utils/getUser';
+import './SignUpPage.css';
 
 function SignUpPage({ setIsSignedIn, username, setUsername, password, setPassword, email, setEmail }) {
   const navigate = useNavigate();
@@ -66,22 +67,30 @@ function SignUpPage({ setIsSignedIn, username, setUsername, password, setPasswor
 
   return (
     <>
-      <title>Create Account - To-Do List</title>
+      <div className="sign-up-page">
+        <title>Create Account - To-Do List</title>
 
-      <h1><NavLink to="/" className="logo" style={{ textDecoration: 'none' }}>✔️ To-Do List</NavLink></h1>
-      <h3>Create Account</h3>
-      <form onSubmit={handleSubmit}>
-        <label for="email">Email:</label><br />
-        <input type="email" id="email" name="email" placeholder="Enter email" value={email} onChange={handleEmailChange} /><br /><br />
-        <label for="username">Username:</label><br />
-        <input type="text" id="username" name="username" placeholder="Enter username" value={username} onChange={handleUsernameChange} required /><br /><br />
-        <label for="password">Password:</label><br />
-        <input type="password" id="password" name="password" placeholder="Enter password" value={password} onChange={handlePasswordChange} required /><br /><br />
-        <input type="submit" value="Submit" />
-      </form>
+        <div className="heading">
+          <h2><NavLink to="/" className="logo">✔️ To-Do List</NavLink></h2>
+          <h3>Create Account</h3>
+        </div>
+        <div className="sign-up-form">
+          <form onSubmit={handleSubmit}>
+            <label for="email">Email:</label><br />
+            <input type="email" id="email" name="email" placeholder="Enter email" value={email} onChange={handleEmailChange} /><br /><br />
+            <label for="username">Username:</label><br />
+            <input type="text" id="username" name="username" placeholder="Enter username" value={username} onChange={handleUsernameChange} required /><br /><br />
+            <label for="password">Password:</label><br />
+            <input type="password" id="password" name="password" placeholder="Enter password" value={password} onChange={handlePasswordChange} required /><br /><br />
+            <input className="submit-button" type="submit" value="Sign up" />
+          </form>
+        </div>
 
-      <p>Already have an account?</p>
-      <NavLink to="/login" className="login-link">Log in</NavLink>
+        <div className="footing">
+          <p>Already have an account?</p>
+          <NavLink to="/login" className="login-link">Log in</NavLink>
+        </div>
+      </div>
     </>
   );
 }
