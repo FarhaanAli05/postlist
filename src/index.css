@@ -112,14 +112,69 @@ li {
   width: 650px;
 }
 
-@media (max-width: 419px) and (min-width: 301px) {
+@media (max-width: 367px) and (min-width: 306px) {
+
+  body {
+    overflow-x: hidden;
+  }
+
+  h1 {
+    font-size: 50px;
+  }
+
+  .task-input-container input {
+    width: 200px;
+    font-size: 18px;
+    /* background-color: red; */
+  }
 
   li {
-    width: 250px;
+    width: 205px;
+  }
+
+  .to-do-list .new-task-extra-info {
+    /* background-color: red; */
+    width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
   }
 }
 
-@media (max-width: 496px) and (min-width: 420px) {
+@media (max-width: 411px) and (min-width: 368px) {
+  body {
+    overflow-x: hidden;
+  }
+
+  .task-input-container input {
+    width: 250px;
+    font-size: 18px;
+    /* background-color: red; */
+  }
+
+  li {
+    width: 275px;
+  }
+
+  .to-do-list .new-task-extra-info {
+    width: 340px;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  .new-task-extra-info .add-quantity {
+    /* font-size: 10px; */
+    /* font-weight: bold; */
+    /* color: cyan; */
+  }
+}
+
+@media (max-width: 496px) and (min-width: 412px) {
 
   li {
     width: 300px;

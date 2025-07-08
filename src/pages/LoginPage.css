@@ -1,8 +1,85 @@
 .login-page {
   display: grid;
   place-items: center;
-  height: 100vh;
+  height: 830px;
   grid-template-rows: 1fr 1fr 1fr;
+}
+
+@media (max-width: 305px) {
+
+  div .login-form,
+  label,
+  div .footing {
+    display: none;
+  }
+
+  body {
+    overflow-y: hidden;
+  }
+}
+
+@media (max-width: 329px) and (min-width: 306px) {
+  .login-page .login-form {
+    width: 220px;
+  }
+
+  div .login-page .login-form input:not(.submit-button) {
+    font-size: 13px;
+    background-color: hsl(0, 0%, 90%);
+    color: hsla(0, 0%, 0%, 0.8);
+    width: 175px;
+    height: 20px;
+  }
+}
+
+@media (max-width: 395px) and (min-width: 330px) {
+
+  .login-page .login-form {
+    min-width: 250px;
+    padding: 20px;
+    /* background-color: red; */
+  }
+
+  .login-page .login-form input:not(.submit-button) {
+    font-size: 13px;
+    background-color: hsl(0, 0%, 90%);
+    color: hsla(0, 0%, 0%, 0.8);
+    width: 200px;
+    height: 20px;
+  }
+
+  .login-page .login-form label {
+    font-size: 12px;
+  }
+
+  .login-page .login-form .submit-button {
+    width: 100%;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 425px) and (min-width: 306px) {
+  .login-page .login-form {
+    min-width: 200px;
+    padding: 20px;
+  }
+
+  .login-page .login-form input:not(.submit-button) {
+    font-size: 13px;
+    background-color: hsl(0, 0%, 90%);
+    color: hsla(0, 0%, 0%, 0.8);
+    width: 225px;
+    height: 20px;
+  }
+
+  .login-page .login-form label {
+    font-size: 12px;
+  }
+
+  .login-page .login-form .submit-button {
+    width: 100%;
+    font-size: 13px;
+  }
 }
 
 .login-page h3,
