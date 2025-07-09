@@ -1,9 +1,9 @@
 import Header from "../components/Header";
 
-function HomePage({ isSignedIn, setIsSignedIn, loggedInUsername, setLoggedInUsername, setUsernameOrEmail, setPassword, setEmail }) {
+function BlogPage({ isSignedIn, setIsSignedIn, loggedInUsername, setLoggedInUsername, setUsernameOrEmail, setPassword, setEmail }) {
   return (
     <>
-      <title>Home - To-Do-List</title>
+      <title>Blog - To-Do-List</title>
 
       <Header
         isSignedIn={isSignedIn}
@@ -15,9 +15,9 @@ function HomePage({ isSignedIn, setIsSignedIn, loggedInUsername, setLoggedInUser
         setEmail={setEmail}
       />
 
-      <h1>Welcome, {loggedInUsername}. How can I help you today?</h1>
+      <h1>Blog</h1>
     </>
   );
 }
 
-export default HomePage;
+export default BlogPage;

@@ -1,4 +1,4 @@
-.header {
+/* .header {
   display: flex;
   position: absolute;
   align-items: center;
@@ -9,7 +9,6 @@
   border-bottom: 1px solid rgb(35, 35, 35);
   max-width: 692px;
   margin: 0 auto;
-  /* margin-top: 10px; */
 }
 
 @media (max-width: 305px) {
@@ -26,7 +25,6 @@
 
 @media (min-width: 748px) and (max-width: 1500px) {
 
-  /* Tablet styles */
   .header {
     max-width: 692px;
   }
@@ -49,13 +47,14 @@
 
 .username-container span {
   margin-right: 3px;
-}
+} */
 
 .username-container img {
   width: 20px;
   height: 20px;
 }
 
+/* 
 .dropdown-menu {
   position: absolute;
   top: 35px;
@@ -79,4 +78,4 @@
   width: 25px;
   height: 25px;
   margin-left: 10px;
-}
+} */

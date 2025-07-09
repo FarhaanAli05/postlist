@@ -1,18 +1,31 @@
 import { useState, useEffect, useRef } from 'react';
-import { NavLink, useNavigate } from 'react-router';
+import { NavLink, useNavigate, useLocation } from 'react-router';
 import Cookies from 'js-cookie';
 import arrowDownIcon from '../assets/arrow-down.png';
 import arrowUpIcon from '../assets/arrow-up.png';
 import signOutIcon from '../assets/sign-out.png';
 import './Header.css';
 
-function Header({ isSignedIn, loggedInUsername }) {
+function Header({ isSignedIn, setIsSignedIn, loggedInUsername, setLoggedInUsername, setUsernameOrEmail, setPassword, setEmail }) {
   const [showDropdown, setShowDropdown] = useState(false);
+
   const menuRef = useRef(null);
   const usernameRef = useRef(null);
+
   const navigate = useNavigate();
+  const location = useLocation();
+  const currentPath = location.pathname;
 
   useEffect(() => {
+    if (Cookies.get('is_signed_in')) {
+      setIsSignedIn(true);
+      setLoggedInUsername(Cookies.get('username'));
+    } else {
+      setUsernameOrEmail('');
+      setPassword('');
+      setEmail('');
+    }
+
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target) && !usernameRef.current.contains(event.target)) {
         setShowDropdown(false);
@@ -27,6 +40,27 @@ function Header({ isSignedIn, loggedInUsername }) {
       <div className="header">
         <div className="logo-container">
           <p><NavLink to="/" className="logo" style={{ textDecoration: 'none' }}>✔️ To-Do List</NavLink></p>
+        </div>
+        <div className="home">
+          <p><NavLink to="/" className="home-link" style={{
+            textDecoration: currentPath === '/'
+              ? 'underline'
+              : 'none'
+          }}>Home</NavLink></p>
+        </div>
+        <div className="tasks">
+          <p><NavLink to="/tasks" className="tasks-link" style={{
+            textDecoration: currentPath === '/tasks'
+              ? 'underline'
+              : 'none'
+          }}>Tasks</NavLink></p>
+        </div>
+        <div className="blog">
+          <p><NavLink to="/blog" className="blog-link" style={{
+            textDecoration: currentPath === '/blog'
+              ? 'underline'
+              : 'none'
+          }}>Blog</NavLink></p>
         </div>
         <div className="profile-container">
           {!isSignedIn ? (

@@ -3,7 +3,7 @@ import { useNavigate, NavLink } from 'react-router';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 import getUser from '../utils/getUser';
-import './SignUpPage.css';
+// import './SignUpPage.css';
 
 function SignUpPage({ setIsSignedIn, username, setUsername, password, setPassword, email, setEmail }) {
   const navigate = useNavigate();
@@ -71,7 +71,7 @@ function SignUpPage({ setIsSignedIn, username, setUsername, password, setPasswor
         <title>Create Account - To-Do List</title>
 
         <div className="heading">
-          <h2><NavLink to="/" className="logo">✔️ To-Do List</NavLink></h2>
+          <h2><NavLink to="/" className="logo" style={{ textDecoration: 'none' }}>✔️ To-Do List</NavLink></h2>
           <h3>Create Account</h3>
         </div>
         <div className="sign-up-form">
