@@ -1,14 +1,11 @@
-/* .header {
+.header {
   display: flex;
-  position: absolute;
   align-items: center;
   justify-content: space-between;
-  top: -100px;
-  right: 20px;
-  left: 20px;
   border-bottom: 1px solid rgb(35, 35, 35);
   max-width: 692px;
   margin: 0 auto;
+  margin-top: -5px;
 }
 
 @media (max-width: 305px) {
@@ -30,11 +27,33 @@
   }
 }
 
-@media (min-width: 1501px) {}
+/* @media (min-width: 1501px) {} */
+
+.logo-container {
+  flex: 1;
+  place-items: start;
+}
+
+.profile-container {
+  flex: 1;
+  place-items: end;
+}
+
+.links {
+  display: flex;
+  flex: 2;
+  justify-content: space-evenly;
+}
 
 .logo {
   color: rgb(200, 200, 200);
   font-weight: bold;
+}
+
+.home-link,
+.tasks-link,
+.blog-link {
+  color: rgb(200, 200, 200);
 }
 
 .username-container {
@@ -47,14 +66,14 @@
 
 .username-container span {
   margin-right: 3px;
-} */
+}
 
 .username-container img {
   width: 20px;
   height: 20px;
 }
 
-/* 
+
 .dropdown-menu {
   position: absolute;
   top: 35px;
@@ -78,4 +97,4 @@
   width: 25px;
   height: 25px;
   margin-left: 10px;
-} */
+}

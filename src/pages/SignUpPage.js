@@ -3,7 +3,7 @@ import { useNavigate, NavLink } from 'react-router';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 import getUser from '../utils/getUser';
-// import './SignUpPage.css';
+import './SignUpPage.css';
 
 function SignUpPage({ setIsSignedIn, username, setUsername, password, setPassword, email, setEmail }) {
   const navigate = useNavigate();

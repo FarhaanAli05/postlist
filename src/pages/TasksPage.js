@@ -8,7 +8,7 @@ import TaskItems from '../components/TaskItems.js';
 import TaskExtraInfo from '../components/TaskExtraInfo.js';
 import refreshAccessToken from '../utils/refreshAccessToken.js';
 
-function HomePage({ isSignedIn, setIsSignedIn, usernameOrEmail, setUsernameOrEmail, setPassword, setEmail, loggedInUsername, setLoggedInUsername }) {
+function TasksPage({ isSignedIn, setIsSignedIn, usernameOrEmail, setUsernameOrEmail, setPassword, setEmail, loggedInUsername, setLoggedInUsername }) {
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState({});
   const [editIndex, setEditIndex] = useState(-1);
@@ -51,6 +51,8 @@ function HomePage({ isSignedIn, setIsSignedIn, usernameOrEmail, setUsernameOrEma
             Cookies.remove('is_signed_in');
             navigate('/signup');
           }
+        } else if (error.response && error.response.status === 500) {
+          alert('Server error occurred. Please try again later.');
         }
       }
     }
@@ -103,6 +105,8 @@ function HomePage({ isSignedIn, setIsSignedIn, usernameOrEmail, setUsernameOrEma
           setNewTask({ text: "", finished: 'incomplete', description: '', quantity: 0 });
           setIsAddDesc(false);
           setIsAddQty(false);
+        } else if (error.response && error.response.status === 500) {
+          alert('Server error occurred. Please try again later.');
         }
       }
     }
@@ -207,4 +211,4 @@ function HomePage({ isSignedIn, setIsSignedIn, usernameOrEmail, setUsernameOrEma
   );
 }
 
-export default HomePage;
+export default TasksPage;

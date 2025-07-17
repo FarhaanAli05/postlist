@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import login_user, register_user, get_user, get_or_add_task, finish_or_delete_task, edit_task
+from .views import login_user, register_user, get_user, get_or_add_task, finish_or_delete_task, edit_task, get_or_create_post, get_post
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView
@@ -12,6 +12,8 @@ urlpatterns = [
     path('register/', register_user, name='register'),
     path('login/', login_user, name=('login')),
     path('getuser/', get_user, name=('get_user')),
+    path('post/', get_or_create_post, name=('get_or_create_post')),
+    path('post/<int:index>/', get_post, name=('get_post')),
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]

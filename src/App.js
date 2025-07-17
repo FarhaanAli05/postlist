@@ -2,10 +2,12 @@ import { useState } from 'react';
 import { Routes, Route } from 'react-router';
 import HomePage from './pages/HomePage';
 import TasksPage from './pages/TasksPage';
-import BlogPage from './pages/BlogPage';
+import BlogsPage from './pages/blog/BlogsPage';
 import LoginPage from './pages/LoginPage';
 import SignUpPage from './pages/SignUpPage';
 import ErrorPage from './pages/ErrorPage';
+import CreatePost from './pages/blog/CreatePost';
+import BlogPost from './pages/blog/BlogPost';
 import ProtectedRoute from './ProtectedRoute';
 
 function App() {
@@ -52,7 +54,37 @@ function App() {
       <Route path="blog"
         element={
           <ProtectedRoute>
-            <BlogPage
+            <BlogsPage
+              isSignedIn={isSignedIn}
+              setIsSignedIn={setIsSignedIn}
+              loggedInUsername={loggedInUsername}
+              setLoggedInUsername={setLoggedInUsername}
+              setUsernameOrEmail={setUsernameOrEmail}
+              setPassword={setPassword}
+              setEmail={setEmail}
+            />
+          </ProtectedRoute>
+        }
+      />
+      <Route path="blog/:id"
+        element={
+          <ProtectedRoute>
+            <BlogPost
+              isSignedIn={isSignedIn}
+              setIsSignedIn={setIsSignedIn}
+              loggedInUsername={loggedInUsername}
+              setLoggedInUsername={setLoggedInUsername}
+              setUsernameOrEmail={setUsernameOrEmail}
+              setPassword={setPassword}
+              setEmail={setEmail}
+            />
+          </ProtectedRoute>
+        }
+      />
+      <Route path="blog/create"
+        element={
+          <ProtectedRoute>
+            <CreatePost
               isSignedIn={isSignedIn}
               setIsSignedIn={setIsSignedIn}
               loggedInUsername={loggedInUsername}

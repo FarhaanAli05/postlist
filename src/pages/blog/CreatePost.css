@@ -1,0 +1,79 @@
+.create-post-title {
+  font-size: 46px;
+  color: white;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.create-post-form {
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
+  max-width: 692px;
+  justify-content: center;
+  margin: 0 auto;
+  /* background-color: red; */
+}
+
+.create-post-form input {
+  box-sizing: border-box;
+  height: 100%;
+  font-size: 18px;
+}
+
+.create-post-form .file-input {
+  background-color: white;
+  font-size: 16px;
+}
+
+.create-post-form textarea {
+  font-size: 18px;
+  padding: 5px 10px;
+  font-family: Poppins, Arial, sans-serif;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.create-post-form button {
+  font-size: 18px;
+  font-family: Poppins, Arial, sans-serif;
+  font-weight: bold;
+  color: white;
+  background-color: hsl(125, 47%, 54%);
+  padding: 10px 15px;
+  text-decoration: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.1s ease;
+  text-align: center;
+  width: fit-content;
+  margin: 0 auto;
+  margin-bottom: 30px;
+}
+
+.content-input {
+  background-color: white;
+  margin-bottom: 15px;
+}
+
+.no-image {
+  display: none;
+}
+
+.image {
+  border-radius: 5px;
+}
+
+.ql-toolbar {
+  display: flex;
+  align-items: center;
+}
+
+.ql-editor {
+  font-size: 20px;
+  font-family: "Source Serif 4", serif;
+}
+
+.create-post-form button:hover {
+  background-color: hsl(125, 47%, 47%);
+}

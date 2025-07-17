@@ -1,0 +1,55 @@
+.article-container {
+  max-width: 692px;
+  place-content: center;
+  margin: 0 auto;
+  color: white;
+}
+
+.article-container h2 {
+  font-size: 42px;
+  line-height: 1.2;
+}
+
+.article-container h3 {
+  color: rgb(200, 200, 200);
+  font-weight: normal;
+}
+
+.article-container img {
+  width: 100%;
+  border-radius: 5px;
+}
+
+.article-container div {
+  color: rgb(200, 200, 200);
+  font-size: 18px;
+  line-height: 32px;
+  margin-bottom: 40px;
+}
+
+.article-container p:not(.author) {
+  margin-top: 40px;
+  font-size: 20px;
+  font-family: "Source Serif 4", serif;
+}
+
+.article-container a {
+  color: rgb(200, 200, 200);
+  font-weight: 600;
+}
+
+.article-container .author {
+  font-size: 18px;
+  margin-top: 18px;
+  margin-bottom: 18px;
+}
+
+.article-container .back-link {
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+}
+
+.article-container .back-link:hover {
+  text-decoration: underline;
+}

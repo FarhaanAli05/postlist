@@ -1,4 +1,5 @@
 import Header from "../components/Header";
+import './HomePage.css'
 
 function HomePage({ isSignedIn, setIsSignedIn, loggedInUsername, setLoggedInUsername, setUsernameOrEmail, setPassword, setEmail }) {
   return (
@@ -15,7 +16,7 @@ function HomePage({ isSignedIn, setIsSignedIn, loggedInUsername, setLoggedInUser
         setEmail={setEmail}
       />
 
-      <h1>Welcome, {loggedInUsername}. How can I help you today?</h1>
+      <h2 className="message">Welcome, {loggedInUsername}. How can I help you today?</h2>
     </>
   );
 }

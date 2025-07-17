@@ -41,26 +41,28 @@ function Header({ isSignedIn, setIsSignedIn, loggedInUsername, setLoggedInUserna
         <div className="logo-container">
           <p><NavLink to="/" className="logo" style={{ textDecoration: 'none' }}>✔️ To-Do List</NavLink></p>
         </div>
-        <div className="home">
-          <p><NavLink to="/" className="home-link" style={{
-            textDecoration: currentPath === '/'
-              ? 'underline'
-              : 'none'
-          }}>Home</NavLink></p>
-        </div>
-        <div className="tasks">
-          <p><NavLink to="/tasks" className="tasks-link" style={{
-            textDecoration: currentPath === '/tasks'
-              ? 'underline'
-              : 'none'
-          }}>Tasks</NavLink></p>
-        </div>
-        <div className="blog">
-          <p><NavLink to="/blog" className="blog-link" style={{
-            textDecoration: currentPath === '/blog'
-              ? 'underline'
-              : 'none'
-          }}>Blog</NavLink></p>
+        <div className="links">
+          <div className="home">
+            <p><NavLink to="/" className="home-link" style={{
+              textDecoration: currentPath === '/'
+                ? 'underline'
+                : 'none'
+            }}>Home</NavLink></p>
+          </div>
+          <div className="tasks">
+            <p><NavLink to="/tasks" className="tasks-link" style={{
+              textDecoration: currentPath.includes('/tasks')
+                ? 'underline'
+                : 'none'
+            }}>Tasks</NavLink></p>
+          </div>
+          <div className="blog">
+            <p><NavLink to="/blog" className="blog-link" style={{
+              textDecoration: currentPath.includes('/blog')
+                ? 'underline'
+                : 'none'
+            }}>Blog</NavLink></p>
+          </div>
         </div>
         <div className="profile-container">
           {!isSignedIn ? (

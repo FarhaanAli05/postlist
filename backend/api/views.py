@@ -1,4 +1,5 @@
-from django.http import JsonResponse
+from django.core.files.storage import default_storage
+from django.conf import settings
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
@@ -7,8 +8,9 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
-from .models import Task
+from .models import Task, BlogPost
 from .services import get_tasks
+from .serializers import BlogPostSerializer
 
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
@@ -69,6 +71,40 @@ def edit_task(request, index):
         setattr(matching_task, key, value)
     matching_task.save(update_fields=['text', 'description', 'quantity'])
     return get_tasks(request)
+
+@api_view(['GET', 'POST'])
+@permission_classes([IsAuthenticated])
+def get_or_create_post(request):
+    if request.method == 'GET':
+        posts = BlogPost.objects.all()
+        serializer = BlogPostSerializer(posts, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    elif request.method == 'POST':
+        title = request.data.get('title')
+        author = request.data.get('author')
+        summary = request.data.get('summary')
+        content = request.data.get('content')
+        file = request.FILES.get('file')
+        filename = ''
+        if file:
+            filename = default_storage.save(file.name, file)
+        else:
+            filename = 'gray.png'
+        BlogPost.objects.create(
+            title=title,
+            author=author,
+            summary=summary,
+            content=content,
+            file=filename
+        )
+        return Response({'message': 'Blog post successfuly created!'}, status=status.HTTP_201_CREATED)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_post(request, index):
+    matching_post = BlogPost.objects.get(pk=index)
+    serializer = BlogPostSerializer(matching_post)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 def login_user(request):
