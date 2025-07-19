@@ -54,7 +54,7 @@ function BlogsPage({ isSignedIn, setIsSignedIn, loggedInUsername, setLoggedInUse
 
   return (
     <div className="blogs-page">
-      <title>Blog - To-Do-List</title>
+      <title>Blog - PostList</title>
 
       <Header
         isSignedIn={isSignedIn}

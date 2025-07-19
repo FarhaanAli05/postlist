@@ -162,7 +162,7 @@ function TasksPage({ isSignedIn, setIsSignedIn, usernameOrEmail, setUsernameOrEm
 
   return (
     <div className="to-do-list">
-      <title>Tasks - To-Do-List</title>
+      <title>Tasks - PostList</title>
 
       <Header
         isSignedIn={isSignedIn}

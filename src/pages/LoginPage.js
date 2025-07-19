@@ -58,10 +58,10 @@ function LoginPage({ isSignedIn, setIsSignedIn, usernameOrEmail, setUsernameOrEm
   return (
     <>
       <div className="login-page">
-        <title>Login - To-Do List</title>
+        <title>Login - PostList</title>
 
         <div className="heading">
-          <h2><NavLink to="/" className="logo" style={{ textDecoration: 'none' }}>✔️ To-Do List</NavLink></h2>
+          <h2><NavLink to="/" className="logo" style={{ textDecoration: 'none' }}>✔️ PostList</NavLink></h2>
           <h3>Login</h3>
         </div>
         <div className="login-form">

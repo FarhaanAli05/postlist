@@ -68,10 +68,10 @@ function SignUpPage({ setIsSignedIn, username, setUsername, password, setPasswor
   return (
     <>
       <div className="sign-up-page">
-        <title>Create Account - To-Do List</title>
+        <title>Create Account - PostList</title>
 
         <div className="heading">
-          <h2><NavLink to="/" className="logo" style={{ textDecoration: 'none' }}>✔️ To-Do List</NavLink></h2>
+          <h2><NavLink to="/" className="logo" style={{ textDecoration: 'none' }}>✔️ PostList</NavLink></h2>
           <h3>Create Account</h3>
         </div>
         <div className="sign-up-form">

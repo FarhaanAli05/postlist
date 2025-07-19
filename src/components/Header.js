@@ -39,7 +39,7 @@ function Header({ isSignedIn, setIsSignedIn, loggedInUsername, setLoggedInUserna
     <>
       <div className="header">
         <div className="logo-container">
-          <p><NavLink to="/" className="logo" style={{ textDecoration: 'none' }}>✔️ To-Do List</NavLink></p>
+          <p><NavLink to="/" className="logo" style={{ textDecoration: 'none' }}>✔️ PostList</NavLink></p>
         </div>
         <div className="links">
           <div className="home">

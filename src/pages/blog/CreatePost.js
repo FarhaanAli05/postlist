@@ -44,10 +44,6 @@ function CreatePost({ isSignedIn, setIsSignedIn, loggedInUsername, setLoggedInUs
     data.set('content', content);
     data.set('file', file);
 
-    for (const [key, value] of data.entries()) {
-      console.log(key, value);
-    }
-
     let token = Cookies.get('access_token');
     try {
       await axios.post('http://localhost:8000/api/post/', data, {
@@ -88,7 +84,7 @@ function CreatePost({ isSignedIn, setIsSignedIn, loggedInUsername, setLoggedInUs
 
   return (
     <>
-      <title>Create Post - To-Do-List</title>
+      <title>Create Post - PostList</title>
 
       <Header
         isSignedIn={isSignedIn}

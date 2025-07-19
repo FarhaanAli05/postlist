@@ -4,7 +4,7 @@ import './HomePage.css'
 function HomePage({ isSignedIn, setIsSignedIn, loggedInUsername, setLoggedInUsername, setUsernameOrEmail, setPassword, setEmail }) {
   return (
     <>
-      <title>Home - To-Do-List</title>
+      <title>Home - PostList</title>
 
       <Header
         isSignedIn={isSignedIn}
