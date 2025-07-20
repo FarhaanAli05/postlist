@@ -1,70 +1,77 @@
-# Getting Started with Create React App
+# ✔️ PostList
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+PostList is a full-stack single-page application (SPA) where users can sign up, log in, and manage blog posts and tasks. This guide explains how to set up the frontend and backend locally.
 
-## Available Scripts
+![postlist-website-showcase](https://raw.githubusercontent.com/FarhaanAli05/postlist/main/src/assets/postlist-website-showcase.png)
 
-In the project directory, you can run:
+## ⚙️ Prerequisites
 
-### `npm start`
+Make sure you have the following installed:
+- Python 3.9+
+- pip
+- Node.js (v18+ recommended)
+- npm
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+---
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 🛠️ Backend Setup (Django)
 
-### `npm test`
+Open a terminal and run the following commands:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```bash
+cd backend
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py runserver
+```
 
-### `npm run build`
+(Optional) Create a superuser for accessing the Django admin panel:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```bash
+python manage.py createsuperuser
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+The backend should now be running at http://localhost:8000.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 🖥️ Frontend Setup (React)
 
-### `npm run eject`
+Open another terminal window and run:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```bash
+cd frontend
+npm install
+npm start
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+The frontend will be available at http://localhost:3000.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+---
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+All done! 🎉
 
-## Learn More
+---
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## ✨ Features
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- User authentication (sign up, log in, log out) using JWT
+- Create, update, and delete blog posts and tasks
+- Protected routes for authenticated users
+- Responsive single-page design
 
-### Code Splitting
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## 🧱 Tech Stack
 
-### Analyzing the Bundle Size
+🔹 Frontend
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+- React 19 – Single-page application (SPA) architecture
+- JavaScript – Core logic and interactivity
+- JS-Cookie – For handling JWT tokens in the browser
+- CSS – Styling and layout
 
-### Making a Progressive Web App
+🔹 Backend
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- Django – Backend web framework
+- Django REST Framework (DRF) – For building RESTful APIs
+- djangorestframework-simplejwt – For JWT authentication
+- SQLite – Lightweight local database for development
