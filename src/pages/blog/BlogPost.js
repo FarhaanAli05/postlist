@@ -4,6 +4,7 @@ import Cookies from 'js-cookie';
 import axios from 'axios';
 import dayjs from 'dayjs';
 import Header from "../../components/Header";
+import refreshAccessToken from '../../utils/refreshAccessToken';
 import './BlogPost.css';
 
 const DJANGO_BACKEND_URL = 'http://localhost:8000';
@@ -20,19 +21,30 @@ function BlogPost({ isSignedIn, setIsSignedIn, loggedInUsername, setLoggedInUser
   useEffect(() => {
     let token = Cookies.get('access_token');
     const getPost = async () => {
-      try {
-        const response = await axios.get(`http://localhost:8000/api/post/${id}/`, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        });
+      const response = await axios.get(`http://localhost:8000/api/post/${id}/`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      if (response.status === 200) {
         setPost(response.data);
-      } catch (error) {
-        if (error.response) {
-          setPost({});
-          alert('Could not fetch article!');
-          navigate('/blog');
+      } else if (response.status === 401) {
+        const newAccessToken = await refreshAccessToken();
+        Cookies.set('access_token', newAccessToken);
+        token = Cookies.get('access_token');
+        if (newAccessToken) {
+          await axios.get(`http://localhost:8000/api/post/${id}/`, {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
+          setPost(response.data);
+        } else {
+          Cookies.remove('access_token');
+          Cookies.remove('refresh_token');
+          Cookies.remove('username');
+          Cookies.remove('is_signed_in');
+          navigate('/signup');
         }
       }
     };
@@ -45,6 +57,42 @@ function BlogPost({ isSignedIn, setIsSignedIn, loggedInUsername, setLoggedInUser
       setPostDate(`${dayjs(post.created_at.split("T")[0]).format("MMMM D, YYYY")}`);
     }
   }, [post]);
+
+  const deletePost = async () => {
+    let token = Cookies.get('access_token');
+    try {
+      await axios.delete(`http://localhost:8000/api/post/${id}/`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      navigate('/blog');
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        const newAccessToken = await refreshAccessToken();
+        Cookies.set('access_token', newAccessToken);
+        token = Cookies.get('access_token');
+        if (newAccessToken) {
+          await axios.delete(`http://localhost:8000/api/post/${id}/`, {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
+          navigate('/blog');
+        } else {
+          Cookies.remove('access_token');
+          Cookies.remove('refresh_token');
+          Cookies.remove('username');
+          Cookies.remove('is_signed_in');
+          navigate('/signup');
+        }
+      } else {
+        alert('Could not fetch article!');
+        setPost({});
+        navigate('/blog');
+      }
+    }
+  };
 
   return (
     <div className="blog-post-page">
@@ -67,6 +115,15 @@ function BlogPost({ isSignedIn, setIsSignedIn, loggedInUsername, setLoggedInUser
         </p>
         <img src={DJANGO_BACKEND_URL + post.file} />
         <div dangerouslySetInnerHTML={{ __html: post.content }} />
+
+        <div className="post-options">
+          <NavLink to={`/blog/edit/${id}`} className="post-ud">✏️ Edit this post</NavLink>
+          <span className="post-ud" onClick={() => {
+            if (window.confirm('Are you sure you want to delete this post?')) {
+              deletePost();
+            }
+          }}>🗑️ Delete this post</span>
+        </div>
 
         <NavLink className="back-link" to="/blog">{'<'} Back</NavLink>
       </div>

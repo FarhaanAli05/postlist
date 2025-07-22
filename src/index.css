@@ -393,3 +393,7 @@ li {
   align-items: center;
   display: flex;
 }
+
+.required {
+  color: red;
+}

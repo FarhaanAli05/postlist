@@ -66,9 +66,9 @@ function LoginPage({ isSignedIn, setIsSignedIn, usernameOrEmail, setUsernameOrEm
         </div>
         <div className="login-form">
           <form onSubmit={handleSubmit}>
-            <label for="username">Email or username:</label><br />
+            <label for="username">Email or username:</label><span className="required"> *</span><br />
             <input type="text" id="username" name="username" placeholder="Enter username" value={usernameOrEmail} onChange={handleUsernameChange} required /><br /><br />
-            <label for="password">Password:</label><br />
+            <label for="password">Password:</label><span className="required"> *</span><br />
             <input type="password" id="password" name="password" placeholder="Enter password" value={password} onChange={handlePasswordChange} required /><br /><br />
             <input className="submit-button" type="submit" value="Log in" />
           </form>

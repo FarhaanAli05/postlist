@@ -99,12 +99,30 @@ def get_or_create_post(request):
         )
         return Response({'message': 'Blog post successfuly created!'}, status=status.HTTP_201_CREATED)
 
-@api_view(['GET'])
+@api_view(['GET', 'DELETE', 'PATCH'])
 @permission_classes([IsAuthenticated])
-def get_post(request, index):
+def blog_post_detail(request, index):
     matching_post = BlogPost.objects.get(pk=index)
-    serializer = BlogPostSerializer(matching_post)
-    return Response(serializer.data, status=status.HTTP_200_OK)
+    if request.method == 'GET':
+        serializer = BlogPostSerializer(matching_post)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    elif request.method == 'DELETE':
+        matching_post.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    elif request.method == 'PATCH':
+        serializer = BlogPostSerializer(matching_post, data=request.data, partial=True)
+        if serializer.is_valid():
+            if 'file' in request.FILES:
+                file = request.FILES['file']
+                if matching_post.file:
+                    default_storage.delete(matching_post.file.name)
+                filename = default_storage.save(file.name, file)
+                matching_post.file.name = filename
+                matching_post.save(update_fields=['file'])
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        print(serializer.errors)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 def login_user(request):

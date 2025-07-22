@@ -53,3 +53,30 @@
 .article-container .back-link:hover {
   text-decoration: underline;
 }
+
+.post-options {
+  display: flex;
+  align-items: center;
+  column-gap: 20px;
+}
+
+.post-options a {
+  font-weight: normal;
+}
+
+.post-ud {
+  font-family: Poppins, Arial, sans-serif;
+  font-size: 18px;
+  padding: 10px 15px;
+  text-decoration: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.1s ease;
+  text-align: center;
+  width: fit-content;
+  border: 0.5px solid white;
+}
+
+.post-ud:hover {
+  background-color: #3e3e3e;
+}

@@ -78,9 +78,9 @@ function SignUpPage({ setIsSignedIn, username, setUsername, password, setPasswor
           <form onSubmit={handleSubmit}>
             <label for="email">Email:</label><br />
             <input type="email" id="email" name="email" placeholder="Enter email" value={email} onChange={handleEmailChange} /><br /><br />
-            <label for="username">Username:</label><br />
+            <label for="username">Username:</label><span className="required"> *</span><br />
             <input type="text" id="username" name="username" placeholder="Enter username" value={username} onChange={handleUsernameChange} required /><br /><br />
-            <label for="password">Password:</label><br />
+            <label for="password">Password:</label><span className="required"> *</span><br />
             <input type="password" id="password" name="password" placeholder="Enter password" value={password} onChange={handlePasswordChange} required /><br /><br />
             <input className="submit-button" type="submit" value="Sign up" />
           </form>

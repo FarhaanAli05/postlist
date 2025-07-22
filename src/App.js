@@ -7,6 +7,7 @@ import LoginPage from './pages/LoginPage';
 import SignUpPage from './pages/SignUpPage';
 import ErrorPage from './pages/ErrorPage';
 import CreatePost from './pages/blog/CreatePost';
+import EditPost from './pages/blog/EditPost';
 import BlogPost from './pages/blog/BlogPost';
 import ProtectedRoute from './ProtectedRoute';
 
@@ -85,6 +86,21 @@ function App() {
         element={
           <ProtectedRoute>
             <CreatePost
+              isSignedIn={isSignedIn}
+              setIsSignedIn={setIsSignedIn}
+              loggedInUsername={loggedInUsername}
+              setLoggedInUsername={setLoggedInUsername}
+              setUsernameOrEmail={setUsernameOrEmail}
+              setPassword={setPassword}
+              setEmail={setEmail}
+            />
+          </ProtectedRoute>
+        }
+      />
+      <Route path="blog/edit/:id"
+        element={
+          <ProtectedRoute>
+            <EditPost
               isSignedIn={isSignedIn}
               setIsSignedIn={setIsSignedIn}
               loggedInUsername={loggedInUsername}

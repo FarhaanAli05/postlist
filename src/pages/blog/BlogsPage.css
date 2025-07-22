@@ -38,9 +38,13 @@
 }
 
 .blog-post-container {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
   width: 100%;
   background-color: rgb(247, 247, 247);
   /* padding: 10px; */
+  height: 433px;
   border-radius: 5px;
 }
 
