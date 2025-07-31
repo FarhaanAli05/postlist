@@ -46,6 +46,9 @@ function BlogPost({ isSignedIn, setIsSignedIn, loggedInUsername, setLoggedInUser
           Cookies.remove('is_signed_in');
           navigate('/signup');
         }
+      } else if (response.status === 404) {
+        alert('Blog post not found. It may have been deleted.');
+        navigate('/blog');
       }
     };
     getPost();

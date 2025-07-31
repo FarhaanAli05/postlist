@@ -35,42 +35,48 @@ def get_or_add_task(request):
 @permission_classes([IsAuthenticated])
 def finish_or_delete_task(request, index):
     if request.method == 'POST':
-        user_tasks = Task.objects.filter(user=request.user)
-        tasks_ordered = user_tasks.order_by('id') # Because, this is a small application, I am ordering by ID. Generally, it is preferred to identify row in table using primary key.
-        matching_task = tasks_ordered[index]
-        matching_task_dict = matching_task.__dict__
-        if matching_task_dict['finished'] == 'complete':
-            matching_task_dict['finished'] = 'incomplete'
-        elif matching_task_dict['finished'] == 'incomplete':
-            matching_task_dict['finished'] = 'complete'
-        for key, value in matching_task_dict.items():
-            setattr(matching_task, key, value)
-        matching_task.save(update_fields=['finished'])
-        return get_tasks(request)
+        try:
+            user_tasks = Task.objects.filter(user=request.user).order_by('id')
+            matching_task = user_tasks[index]
+            matching_task_dict = matching_task.__dict__
+            if matching_task_dict['finished'] == 'complete':
+                matching_task_dict['finished'] = 'incomplete'
+            elif matching_task_dict['finished'] == 'incomplete':
+                matching_task_dict['finished'] = 'complete'
+            for key, value in matching_task_dict.items():
+                setattr(matching_task, key, value)
+            matching_task.save(update_fields=['finished'])
+            return get_tasks(request)
+        except IndexError:
+            return Response({'error': 'Task not found'}, status=status.HTTP_404_NOT_FOUND)
     elif request.method == 'DELETE':
-        user_tasks = Task.objects.filter(user=request.user)
-        tasks_ordered = user_tasks.order_by('id')
-        matching_task = tasks_ordered[index]
-        matching_task.delete()
-        return get_tasks(request)
+        try:
+            user_tasks = Task.objects.filter(user=request.user).order_by('id')
+            matching_task = user_tasks[index]
+            matching_task.delete()
+            return get_tasks(request)
+        except IndexError:
+            return Response({'error': 'Task not found'}, status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def edit_task(request, index):
-    user_tasks = Task.objects.filter(user=request.user)
-    tasks_ordered = user_tasks.order_by('id')
-    matching_task = tasks_ordered[index]
-    newText = request.data.get('text')
-    newDesc = request.data.get('description', '')
-    newQty = request.data.get('quantity')
-    matching_task_dict = matching_task.__dict__
-    matching_task_dict['text'] = newText
-    matching_task_dict['description'] = newDesc
-    matching_task_dict['quantity'] = newQty
-    for key, value in matching_task_dict.items():
-        setattr(matching_task, key, value)
-    matching_task.save(update_fields=['text', 'description', 'quantity'])
-    return get_tasks(request)
+    try:
+        user_tasks = Task.objects.filter(user=request.user).order_by('id')
+        matching_task = user_tasks[index]
+        newText = request.data.get('text')
+        newDesc = request.data.get('description', '')
+        newQty = request.data.get('quantity')
+        matching_task_dict = matching_task.__dict__
+        matching_task_dict['text'] = newText
+        matching_task_dict['description'] = newDesc
+        matching_task_dict['quantity'] = newQty
+        for key, value in matching_task_dict.items():
+            setattr(matching_task, key, value)
+        matching_task.save(update_fields=['text', 'description', 'quantity'])
+        return get_tasks(request)
+    except IndexError:
+        return Response({'error': 'Task not found'}, status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
@@ -102,7 +108,10 @@ def get_or_create_post(request):
 @api_view(['GET', 'DELETE', 'PATCH'])
 @permission_classes([IsAuthenticated])
 def blog_post_detail(request, index):
-    matching_post = BlogPost.objects.get(pk=index)
+    try:
+        matching_post = BlogPost.objects.get(pk=index)
+    except BlogPost.DoesNotExist:
+        return Response({'error': 'Blog post not found'}, Response(status=status.HTTP_404_NOT_FOUND))
     if request.method == 'GET':
         serializer = BlogPostSerializer(matching_post)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -121,7 +130,6 @@ def blog_post_detail(request, index):
                 matching_post.save(update_fields=['file'])
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
-        print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
@@ -202,4 +210,4 @@ def get_user(request):
             'email': user_obj.email
         }, status=status.HTTP_200_OK)
     else:
-        return None
+        return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)

@@ -132,6 +132,8 @@ function TasksPage({ isSignedIn, setIsSignedIn, usernameOrEmail, setUsernameOrEm
           }
         });
         setTasks(retriedResponse.data);
+      } else if (error.response === 404) {
+        alert('Task not found. It may have been deleted.');
       }
     }
   }
@@ -156,6 +158,8 @@ function TasksPage({ isSignedIn, setIsSignedIn, usernameOrEmail, setUsernameOrEm
           }
         });
         setTasks(retriedResponse.data);
+      } else if (error.response.status === 404) {
+        alert('Task not found. It may have been deleted.');
       }
     }
   }

@@ -181,7 +181,7 @@ function EditPost({ isSignedIn, setIsSignedIn, loggedInUsername, setLoggedInUser
           required
         />
         <div className="buttons-container">
-          <button id="cancel-button" onClick={() => navigate(`/blog/${id}`)}>Cancel</button>
+          <button id="cancel-button" type="button" onClick={() => navigate(`/blog/${id}`)}>Cancel</button>
           <button>Update post</button>
         </div>
       </form>

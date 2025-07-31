@@ -77,6 +77,10 @@ function TaskItem({ task, index, finishTask, deleteTask, setEditIndex, setEditTe
                         });
                         setTasks(retriedResponse.data);
                         setEditIndex(-1);
+                      } else if (error.response === 500) {
+                        alert('Server error occurred. Please try again later.');
+                      } else if (error.response === 404) {
+                        alert('Task not found. It may have been deleted.');
                       }
                     }
                   }
